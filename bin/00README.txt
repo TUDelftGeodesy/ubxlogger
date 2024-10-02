@@ -1,0 +1,1 @@
+This folder contains binaries and symbolic links to scripts.

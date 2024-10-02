@@ -1,0 +1,1 @@
+This folder contain archived ubx and rinex data in yearly and daily subdirectories.
