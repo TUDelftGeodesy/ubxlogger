@@ -1,0 +1,17 @@
+# Edit this file to introduce tasks to be run by cron.
+# 
+# OpenWrt does not support @reboot directive, use /etc/init.d or put command in the file /etc/rc.local
+# to start on boot, or wait until the end of the hour to check and restart ubxlogd. 
+#
+# Data is archived and pushed to the remote server every hour at 7 minutes past the hour
+# Every hour, at xx:56 and xx:57, we check if the receivers are still logging and if necessary
+# try to restart the loggin
+# Every Sunday and Wednesday, at 1 hour 17 minutes past midnight, data is purged in case the disk is almost full 
+#
+# m h  dom mon dow   command
+#@reboot sleep 120 && /mnt/sdcard/ubxlogger/scripts/ubxlogd.sh start NAMExxTS1 >> /dev/null 2>&1
+07 * * * * (/mnt/sdcard/ubxlogger/scripts/ubxpush.sh NAMExxTS1; /mnt/sdcard/ubxlogger/scripts/ubxpush.sh NAMExxDF1 ) >> /dev/null 2>&1
+17 0 * * * (/mnt/sdcard/ubxlogger/scripts/rnxpush.sh NAMExxTS1; /mnt/sdcard/ubxlogger/scripts/rnxpush.sh NAMExxDF1 ) >> /dev/null 2>&1
+56 * * * * /mnt/sdcard/ubxlogger/scripts/ubxlogd.sh check NAMExxTS1 >> /dev/null 2>&1
+57 * * * * /mnt/sdcard/ubxlogger/scripts/ubxlogd.sh check NAMExxDF1 >> /dev/null 2>&1
+17 1 * * 0,3 /mnt/sdcard/ubxlogger/scripts/ubxpurge.sh >> /dev/null 2>&1 
