@@ -1,0 +1,100 @@
+121,128c
+/* get fields (little-endian) ------------------------------------------------
+* #define U1(p) (*((uint8_t *)(p)))
+* #define I1(p) (*((int8_t  *)(p)))
+* static uint16_t U2(uint8_t *p) {uint16_t u; memcpy(&u,p,2); return u;}
+* static uint32_t U4(uint8_t *p) {uint32_t u; memcpy(&u,p,4); return u;}
+* static int32_t  I4(uint8_t *p) {int32_t  u; memcpy(&u,p,4); return u;}
+* static float    R4(uint8_t *p) {float    r; memcpy(&r,p,4); return r;}
+* static double   R8(uint8_t *p) {double   r; memcpy(&r,p,8); return r;}
+* static double   I8(uint8_t *p) {return I4(p+4)*4294967296.0+U4(p);}
+*/
+
+/* get fields (little/big-endian agnostic) -----------------------------------*/
+#define U1(p) (*((uint8_t *)(p)))       /* One byte uint32_teger */
+#define I1(p) (*((int8_t  *)(p)))       /* One byte signed integer */
+#define U2(p) ReadU2(p)                 /* Two byte uint32_teger */
+#define U4(p) ReadU4(p)                 /* Four byte uint32_teger */
+#define I4(p) ReadI4(p)                 /* Four byte signed integer */
+#define R4(p) ReadR4(p)                 /* IEEE S_FLOAT floating point number */
+#define R8(p) ReadR8(p)                 /* IEEE T_FLOAT floating point number */
+
+typedef union {uint16_t u2; uint8_t c[2];} ENDIAN_TEST;  /* Internal structure definitions. */
+
+static uint16_t ReadU2(uint8_t *p)
+{
+    ENDIAN_TEST et;
+    union U2 {uint16_t u2; uint8_t c[2];} u;
+
+    memcpy(&u.u2, p, sizeof(u.u2));
+
+    et.u2 = 0; et.c[1] = 1;
+    if (et.u2 == 1)
+    {
+        uint8_t t;
+        t = u.c[0]; u.c[0] = u.c[1]; u.c[1] = t;
+    }
+    return u.u2;
+}
+
+static uint32_t ReadU4(uint8_t *p)
+{
+    ENDIAN_TEST et;
+    union U4 {uint32_t u4; uint8_t c[4];} u;
+
+    memcpy(&u.u4, p, sizeof(u.u4));
+
+    et.u2 = 0; et.c[1] = 1;
+    if (et.u2 == 1)
+    {
+        uint8_t t;
+        t = u.c[0]; u.c[0] = u.c[3]; u.c[3] = t;
+        t = u.c[1]; u.c[1] = u.c[2]; u.c[2] = t;
+    }
+    return u.u4;
+}
+
+static int32_t ReadI4(uint8_t *p)
+{
+    union i4 {int32_t i4; uint8_t c[4];} u;
+    ENDIAN_TEST et;
+
+    memcpy(&u.i4, p, sizeof(u.i4));
+
+    et.u2 = 0; et.c[1] = 1;
+    if (et.u2 == 1)
+    {
+        uint8_t t;
+        t = u.c[0]; u.c[0] = u.c[3]; u.c[3] = t;
+        t = u.c[1]; u.c[1] = u.c[2]; u.c[2] = t;
+    }
+    return u.i4;
+}
+
+static float ReadR4(uint8_t *p)
+{
+    union R4 {float f; uint32_t u4;} u;
+    u.u4 = U4(p);
+    return u.f;
+}
+
+static double ReadR8(uint8_t *p)
+{
+    ENDIAN_TEST et;
+    union R8 {double d; uint8_t c[8];} u;
+
+    memcpy(&u.d, p, sizeof(u.d));
+
+    et.u2 = 0; et.c[1] = 1;
+    if (et.u2 == 1)
+    {
+        uint8_t t;
+        t = u.c[0]; u.c[0] = u.c[7]; u.c[7] = t;
+        t = u.c[1]; u.c[1] = u.c[6]; u.c[6] = t;
+        t = u.c[2]; u.c[2] = u.c[5]; u.c[5] = t;
+        t = u.c[3]; u.c[3] = u.c[4]; u.c[4] = t;
+    }
+    return u.d;
+}
+
+.

@@ -1,0 +1,1 @@
+On github executable files are available only in releases as seperate tar ball.
