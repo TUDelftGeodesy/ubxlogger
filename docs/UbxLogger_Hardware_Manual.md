@@ -416,6 +416,6 @@ the cheapest.
 [2]. H. van der Marel (2024), UbxLogger GL-iNet Installation Guide, TU Delft, September 2024.
 
 
-[1]: <UbxLogger_Software_manual.md> "H. van der Marel (2024), UbxLogger Software Manual, TU Delft, September 2024."
+[1]: <UbxLogger_Software_Manual.md> "H. van der Marel (2024), UbxLogger Software Manual, TU Delft, September 2024."
 [2]: <UbxLogger_GL-iNet_Installation_Guide.md> "H. van der Marel (2024), UbxLogger Gl-iNet Installation Guide, TU Delft, September 2024."
 
