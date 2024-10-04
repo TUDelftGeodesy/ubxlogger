@@ -49,7 +49,7 @@ Scripts, executables and modified source code are available as releases on this 
 [3]. H. van der Marel (2024), UbxLogger GL-iNet Installation Guide, TU Delft, September 2024.
 
 
-[1]: <docs/UbxLogger_Software_manual.md> "H. van der Marel (2024), UbxLogger Software Manual, TU Delft, September 2024."
+[1]: <docs/UbxLogger_Software_Manual.md> "H. van der Marel (2024), UbxLogger Software Manual, TU Delft, September 2024."
 [2]: <docs/UbxLogger_Hardware_Manual.md> "H. van der Marel (2024), UbxLogger Hardware Manual, TU Delft, September 2024."
 [3]: <docs/UbxLogger_GL-iNet_Installation_Guide.md> "H. van der Marel (2024), UbxLogger Gl-iNet Installation Guide, TU Delft, September 2024."
 
