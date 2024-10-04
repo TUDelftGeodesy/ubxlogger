@@ -4,8 +4,21 @@
 *~
 *.bak
 
-# Windows executables
+# Windows and Linux executables
 *.exe
+sys/openwrt-mips/bin/*
+sys/raspberry-pi/bin/*
+!sys/openwrt-mips/bin/*.*
+!sys/raspberry-pi/bin/*.*
+
+# Tar balls and zip files
+*.tar.gz
+*.tar
+*.zip
+
+# Folder with non-public site and other data
+sites/
+varia/
 
 # Python Tools 
 __pycache__/
