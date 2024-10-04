@@ -251,8 +251,8 @@ and stopping the `ubxlogd` deamon and automated conversion and file transfer.
 [2]. H. van der Marel (2024), UbxLogger Software Manual, TU Delft, September 2024.
 
 
-[1]: <UbxLogger_Hardware_manual.md> "H. van der Marel (2024), UbxLogger Hardware Manual, TU Delft, September 2024."
-[2]: <UbxLogger_Software_manual.md> "H. van der Marel (2024), UbxLogger Software Manual, TU Delft, September 2024."
+[1]: <UbxLogger_Hardware_Manual.md> "H. van der Marel (2024), UbxLogger Hardware Manual, TU Delft, September 2024."
+[2]: <UbxLogger_Software_Manual.md> "H. van der Marel (2024), UbxLogger Software Manual, TU Delft, September 2024."
 
 ## Appendices
 
