@@ -507,8 +507,8 @@ which is the same for every receiver, and obtain this data from another source.
 Data, Bulletin of the Geospatioal Information Authority of Japan, 55, 21-30.
 (available at https://www.gsi.go.jp/ENGLISH/Bulletin55.html) \
 [4] T.Takasu (2020), RTKLIB: An Open Source Program Package for GNSS Positioning, 
-https://www.rtklib.com/.\
-[5] rtklibexplorer (2024), RTKLIB Demo 5 (b34k), GitHub repository. (available at https://github.com/rtklibexplorer/RTKLIB).\
+https://www.rtklib.com/. \
+[5] rtklibexplorer (2024), RTKLIB Demo 5 (b34k), GitHub repository. (available at https://github.com/rtklibexplorer/RTKLIB). \
 [6] Nuno Goncalves (2022), RTKLIB 2.4.3_b34 OpenWrt package, https://openwrt.org/packages/index/utilities---rtklib-suite. 
 
 
@@ -517,11 +517,9 @@ https://www.rtklib.com/.\
 
 [2]: <UbxLogger_GL-iNet_Installation_Guide.md> "H. van der Marel (2024), UbxLogger Gl-iNet Installation Guide, TU Delft, September 2024."
 
-
 [3]: <https://www.gsi.go.jp/ENGLISH/Bulletin55.html> "Hatanaka, Y. (2008), A Compression Format and Tools for GNSS Observation Data, Bulletin of the Geospatioal Information Authority of Japan, 55, 21-30."
 
 [4]: <https://www.rtklib.com/> "T.Takasu (2020), RTKLIB: An Open Source Program Package for GNSS Positioning."
-
 
 [5]: <https://github.com/rtklibexplorer/RTKLIB> "rtklibexplorer (2024), RTKLIB Demo 5 (b34k), GitHub repository."
 
