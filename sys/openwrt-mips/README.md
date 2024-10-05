@@ -1,5 +1,7 @@
 # OpenWrt MIPS RTKLIB and RNXCMP executables
 
+**Hans van der Marel, TU Delft, September, 2024.**
+
 The following programs have been compiled for OpenWrt MIPS
 
 
@@ -14,7 +16,7 @@ OpenWrt packages are installed with the OpenWrt package manager. Cross-compiled 
 
 ## str2str
 
-RTKLIB str2str [(Takasu, 2022)][4] is available for OpenWrt as installable OpenWrt package [(Consalves, 2002][2] and as cross-compiled RTKLIB Demo 5 b34k [(rtklibexplorer, 2024)][3] binary in this folder by undersigned. The recommended version for UbxLogger is  `str2str`  installed by the OpenWrt package manager. 
+RTKLIB str2str [(Takasu, 2022)][4] is available for OpenWrt as installable OpenWrt package [(Consalves, 2002][2] and as cross-compiled RTKLIB Demo 5 b34k [(rtklibexplorer, 2024)][3] binary in this folder by the author of this document. The recommended version for UbxLogger is  `str2str`  installed by the OpenWrt package manager. 
 
 ## convbin 
 
@@ -45,7 +47,7 @@ RTKLIB str2str and convbin are available under BSD 2-clause
 license (http://opensource.org/licenses/BSD-2-Clause) and additional two
 exclusive clauses, see [LICENSE_RTKLIB](LICENSE_RTKLIB.txt) for the full license.
 
-The software was cross-compiled for OpenWrt-mips by undersigned, using 
+The software was cross-compiled for OpenWrt-mips by the author of this document, using 
 source code from RTKLIB demo5 b34k (https://github.com/rtklibexplorer/RTKLIB/releases)
 with a modified version of `ublox.c`. The modified version of `ublox.c` is available 
 under the same BSD clauses and compatible with the Apache 2 license of UbxLogger.  
@@ -58,15 +60,15 @@ https://www.gsi.go.jp/ENGLISH/page_e30286.html (except for provision 1-a),
 see [LICENSE_RNXCMP](LICENSE_RNXCMP.txt) for the full text of the license. The reference
 to the software is [Hatanaka, 2008][1]. 
 
-The software was cross compiled for OpenWrt-mips by undersigned using 
+The software was cross compiled for OpenWrt-mips by the author of this document, using 
 the unmodified c-code from https://terras.gsi.go.jp/ja/crx2rnx/RNXCMP_4.1.0_src.tar.gz 
 
 
 ## Disclaimer
 
-The cross compiling and code changes for OpenWrt-mips was done on a best effort basis by undersigned
-and is offered “as-is”, without warranty, and disclaiming liability for damages 
-resulting from using the cross compiled binaries or license infringements resulting
+The cross compiling and code changes for OpenWrt-mips was done on a best effort basis by the
+author of this document and is offered “as-is”, without warranty, and disclaiming liability 
+for damages resulting from using the cross compiled binaries or license infringements resulting
 from the use of the software. 
 
 ## References
@@ -89,8 +91,4 @@ https://www.rtklib.com/.
 [3]: <https://github.com/rtklibexplorer/RTKLIB> "rtklibexplorer (2024), RTKLIB Demo 5 (b34k), GitHub repository."
 
 [4]: <https://www.rtklib.com/> "T.Takasu (2020), RTKLIB: An Open Source Program Package for GNSS Positioning."
-
-Hans van der Marel
-Delft, 29 September 2024
-
 

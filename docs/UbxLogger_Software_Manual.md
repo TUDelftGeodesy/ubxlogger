@@ -30,7 +30,7 @@ at 10 sec sample rate, only takes less than 200 MB/month.
 ## UbxLogger scripts
 
 `UbxLogger` is written entirely as shell scripts. No `Python`, `Perl`, or other tools are 
-required. This is to reduce memory usage so that it will run on `OpenWrt` routers 
+required, except for a few `RTKLIB` ([4],[5],[6]) and optionally `RNXCMP` [(3)][3] binaries. This is to reduce memory usage so that it will run on `OpenWrt` routers 
 with limited flash, ROM and RAM memory, while simultaneously be able to run it on more powerfull 
 single board computers (SBC) like the Raspberry Pi. 
 
@@ -42,13 +42,13 @@ also `OpenWrt`.
 The scripts also run on the more powerful `bash` shell used by for instance
 the Raspberry Pi and many other Linuxes.
 
-In the background `str2str` from `RTKLIB` is used to capture data from the receiver. This can
-be imported as extension package in `OpenWrt`. If not available for your system, it can 
+In the background `str2str` from `RTKLIB` ([4],[5]) is used to capture data from the receiver. This can
+be imported as extension package in `OpenWrt` [(6)][6]. If not available for your system, it can 
 be cross-compiled on a Linux desktop using the `OpenWrt` developer suite and `RTKLIB` source
 code. On the Raspberry Pi you can natively compile `str2str` with `gcc` from the `RTKLIB` source
 code.
 
-For the optional conversion to RINEX the `convbin` console app from `RTKLIB` and `rnx2crx` from Yuki Hatanaka
+For the optional conversion to RINEX the `convbin` console app from `RTKLIB` ([4],[5]) and `rnx2crx` from Yuki Hatanaka [(3)][3]
 are needed. These can be compiled natively on the Raspberry Pi, or cross-compiled using the 
 `OpenWrt` developer package. It is also possible to convert the data to RINEX on an upstream
 server, desktop or laptop using the same tools.
@@ -501,7 +501,31 @@ which is the same for every receiver, and obtain this data from another source.
 [1]. H. van der Marel (2024), UbxLogger Hardware Manual, TU Delft, September 2024.\
 [2]. H. van der Marel (2024), UbxLogger GL-iNet Installation Guide, TU Delft, September 2024.
 
+## References
+
+[3] Hatanaka, Y. (2008), A Compression Format and Tools for GNSS Observation
+Data, Bulletin of the Geospatioal Information Authority of Japan, 55, 21-30.
+(available at https://www.gsi.go.jp/ENGLISH/Bulletin55.html) \
+[4] T.Takasu (2020), RTKLIB: An Open Source Program Package for GNSS Positioning, 
+https://www.rtklib.com/.\
+[5] rtklibexplorer (2024), RTKLIB Demo 5 (b34k), GitHub repository. (available at https://github.com/rtklibexplorer/RTKLIB).\
+[6] Nuno Goncalves (2022), RTKLIB 2.4.3_b34 OpenWrt package, https://openwrt.org/packages/index/utilities---rtklib-suite. 
+
+
 
 [1]: <UbxLogger_Hardware_Manual.md> "H. van der Marel (2024), UbxLogger Hardware Manual, TU Delft, September 2024."
+
 [2]: <UbxLogger_GL-iNet_Installation_Guide.md> "H. van der Marel (2024), UbxLogger Gl-iNet Installation Guide, TU Delft, September 2024."
+
+
+[3]: <https://www.gsi.go.jp/ENGLISH/Bulletin55.html> "Hatanaka, Y. (2008), A Compression Format and Tools for GNSS Observation Data, Bulletin of the Geospatioal Information Authority of Japan, 55, 21-30."
+
+[4]: <https://www.rtklib.com/> "T.Takasu (2020), RTKLIB: An Open Source Program Package for GNSS Positioning."
+
+
+[5]: <https://github.com/rtklibexplorer/RTKLIB> "rtklibexplorer (2024), RTKLIB Demo 5 (b34k), GitHub repository."
+
+[6]: <https://openwrt.org/packages/index/utilities---rtklib-suite> "Nuno Goncalves (2022), RTKLIB 2.4.3_b34 OpenWrt package." 
+
+
 
