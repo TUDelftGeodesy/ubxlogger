@@ -47,7 +47,7 @@ Scripts, executables and modified source code are available as releases on this 
 Copyright 2024 Hans van der Marel, Delft University of Technology.
 
 Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
+you may not use this software except in compliance with the License.
 You may obtain a copy of the License at
 
 > http://www.apache.org/licenses/LICENSE-2.0
