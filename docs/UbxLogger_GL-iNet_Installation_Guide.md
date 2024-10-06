@@ -105,7 +105,7 @@ To install `UbxLogger` :
 1. Change directory to the sd card root with `cd /mnt/sdcard/`
 2. Download the `UbxLogger` software form `github` and unpack
 
-   >  curl https://github.com/hvandermarel/ubxlogger/releases/ubxlogger.tar.gz -o ./ubxlogger.tar.gz \
+   >  curl -L https://github.com/hvandermarel/ubxlogger/archive/main.tar.gz -o ubxlogger.tar.gz \
    >  tar -xzf ubxlogger.tar.gz
 
    This will create the basic directory structure, with scripts and example configuration files.
@@ -251,8 +251,8 @@ and stopping the `ubxlogd` deamon and automated conversion and file transfer.
 [2]. H. van der Marel (2024), UbxLogger Software Manual, TU Delft, September 2024.
 
 
-[1]: <UbxLogger_Hardware_Manual.md> "H. van der Marel (2024), UbxLogger Hardware Manual, TU Delft, September 2024."
-[2]: <UbxLogger_Software_Manual.md> "H. van der Marel (2024), UbxLogger Software Manual, TU Delft, September 2024."
+[1]: <UbxLogger_Hardware_manual.md> "H. van der Marel (2024), UbxLogger Hardware Manual, TU Delft, September 2024."
+[2]: <UbxLogger_Software_manual.md> "H. van der Marel (2024), UbxLogger Software Manual, TU Delft, September 2024."
 
 ## Appendices
 
