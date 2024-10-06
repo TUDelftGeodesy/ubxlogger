@@ -4,6 +4,10 @@
 
 U-blox ZED-F9P GNSS logging scripts for OpenWrt and Single Board Computers.
 
+**The current version, `1.0-alpha`, is under active development, intended only for 
+internal testing, and the information displayed in the documentation may not always be up to date. 
+The next stable release is planned for mid October 2024.** 
+
 ## What is UbxLogger?
 
 `UbxLogger` is a suite of shell scripts and executables for logging data from a U-blox 
