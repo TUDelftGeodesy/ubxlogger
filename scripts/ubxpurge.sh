@@ -2,10 +2,6 @@
 #
 # ubxpurge   Purge ubxdata archive and logfiles
 #
-# ---------------
-# BusyBox version
-# ---------------
-#
 # (c) 2024 Hans van der Marel, TUD.
 
 #-------------------------------------------------------------------------

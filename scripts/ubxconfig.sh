@@ -17,12 +17,12 @@ source ${ubxscriptdir}/ubxlogger.config
 # Echo 
 
 echo "Directory locations:"
-echo "  ubxlogger root        $ubxdir"
+echo "  ubxlogger home        $ubxdir"
 echo "  scripts and config    $ubxscriptdir"
 echo "  active str2str files  $rundir"
 echo "  log files             $logdir"
 echo "  spool directory       $spooldir"
-echo "  ubx data archive      $archivedir"
+echo "  data archive          $archivedir"
 echo ""
 echo "Ubx upload server:      $remoteubx"
 echo "Rinex upload server:    $remoternx"

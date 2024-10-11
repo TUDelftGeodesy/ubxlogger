@@ -1,0 +1,9 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2024 Hans van der Marel, TU Delft
+
+START=55
+
+start() {
+   cmd=$(crontab -l | grep "^\#@reboot" | cut -d " " -f2-)
+   eval "($cmd)&"
+}

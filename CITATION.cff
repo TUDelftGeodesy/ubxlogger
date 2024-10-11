@@ -6,6 +6,6 @@ authors:
   orcid: "https://orcid.org/0000-0002-0678-8068"
 title: "UbxLogger: U-blox ZED-F9P GNSS logging scripts for OpenWrt routers and Single Board Computers."
 version: 1.0-alpha
-doi: 
+doi: 10.4121/889fb86b-8b32-4b93-9689-f04b3d3c2571
 date-released: 2024-10-05
 url: "https://github.com/hvandermarel/ubxlogger"

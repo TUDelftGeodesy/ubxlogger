@@ -8,8 +8,8 @@
 
 #convbin="/c/Programs/rtklib_demo5_b34g/convbin.exe"
 #rnx2crx="/c/bin/rnx2crx.exe" 
-convbin=./convbin
-rnx2crx=./rnx2crx
+convbin=convbin
+rnx2crx=rnx2crx
 
 # process options and file arguments
 

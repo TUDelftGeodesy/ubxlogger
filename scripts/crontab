@@ -1,17 +1,31 @@
 # Edit this file to introduce tasks to be run by cron.
 # 
-# OpenWrt does not support @reboot directive, use /etc/init.d or put command in the file /etc/rc.local
-# to start on boot, or wait until the end of the hour to check and restart ubxlogd. 
+# OpenWrt does not support @reboot directive. As a work around
 #
-# Data is archived and pushed to the remote server every hour at 7 minutes past the hour
-# Every hour, at xx:56 and xx:57, we check if the receivers are still logging and if necessary
-# try to restart the loggin
-# Every Sunday and Wednesday, at 1 hour 17 minutes past midnight, data is purged in case the disk is almost full 
+#    1. In the crontab comment out the reboot directive with a single "#" and no spaces
+#    2. Add startup script to /etc/init.d to process the commented out "#@reboot" directive
+#
+#         cp sys/open-wrt/scripts/cronatreboot to /etc/init.d/
+#         /etc/init.d/crontatreboot enable
+# 
+# This needs to be do only once (as part of the installation procedure).
+#
+# On the next boot the "#@reboot" line will be processed right after starting cron. 
+# To test it, enter in the terminal "/etc/init.d/cronatreboot start". To undo this
+# edit the crontab and insert an extra "#" like this "##@reboot ..".
+#
+# Ubx data is archived (and optionally pushed to the remote server) every hour at 7 minutes 
+#    past the hour.
+# Every hour, at xx:56, we check if the receivers are still logging and if necessary
+#    try to restart logging.
+# Every day, at 17 minutes past midnights UTC, daily RINEX files are created and send to
+#    the remote server.
+# Every Sunday and Wednesday, at 37 minutes past midnight, data is purged in case 
+#    the disk is almost full 
 #
 # m h  dom mon dow   command
-#@reboot sleep 120 && /mnt/sdcard/ubxlogger/scripts/ubxlogd.sh start NAMExxTS1 >> /dev/null 2>&1
-07 * * * * (/mnt/sdcard/ubxlogger/scripts/ubxpush.sh NAMExxTS1; /mnt/sdcard/ubxlogger/scripts/ubxpush.sh NAMExxDF1 ) >> /dev/null 2>&1
-17 0 * * * (/mnt/sdcard/ubxlogger/scripts/rnxpush.sh NAMExxTS1; /mnt/sdcard/ubxlogger/scripts/rnxpush.sh NAMExxDF1 ) >> /dev/null 2>&1
-56 * * * * /mnt/sdcard/ubxlogger/scripts/ubxlogd.sh check NAMExxTS1 >> /dev/null 2>&1
-57 * * * * /mnt/sdcard/ubxlogger/scripts/ubxlogd.sh check NAMExxDF1 >> /dev/null 2>&1
-17 1 * * 0,3 /mnt/sdcard/ubxlogger/scripts/ubxpurge.sh >> /dev/null 2>&1 
+#@reboot sleep 60 && (/mnt/sda1/ubxlogger/scripts/ubxlogd.sh start NAMExxTS1; /mnt/sda1/ubxlogger/scripts/ubxlogd.sh start NAMExxDF1 ) >> /dev/null 2>&1
+07 * * * * (/mnt/sda1/ubxlogger/scripts/ubxpush.sh NAMExxTS1; /mnt/sda1/ubxlogger/scripts/ubxpush.sh NAMExxDF1 ) >> /dev/null 2>&1
+17 0 * * * (/mnt/sda1/ubxlogger/scripts/rnxpush.sh NAMExxTS1; /mnt/sda1/ubxlogger/scripts/rnxpush.sh NAMExxDF1 ) >> /dev/null 2>&1
+56 * * * * (/mnt/sda1/ubxlogger/scripts/ubxlogd.sh check NAMExxTS1; /mnt/sda1/ubxlogger/scripts/ubxlogd.sh check NAMExxDF1 ) >> /dev/null 2>&1
+37 0 * * 0,3 /mnt/sda1/ubxlogger/scripts/ubxpurge.sh >> /dev/null 2>&1 

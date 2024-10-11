@@ -2,10 +2,6 @@
 #
 # ubxpush   push hourly ubx files to archive and upload to upstream server
 #
-# ---------------
-# BusyBox version
-# ---------------
-#
 # (c) 2024 Hans van der Marel, TUD.
 
 #-------------------------------------------------------------------------

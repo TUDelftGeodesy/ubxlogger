@@ -2,10 +2,6 @@
 #
 # rnxpush   convert ubx to daily rinex files, push to archive and upload to upstream server
 #
-# ---------------
-# BusyBox version
-# ---------------
-#
 # (c) 2024 Hans van der Marel, TUD.
 
 #-------------------------------------------------------------------------

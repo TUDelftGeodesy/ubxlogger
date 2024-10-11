@@ -2,9 +2,8 @@
 #
 # ubxlogd   start, stop, restart and display status of ubxlog deamon
 #
-# ---------------
-# BusyBox version
-# ---------------
+# (c) 2024 Hans van der Marel, TUD.
+
 #
 # (c) 2024 Hans van der Marel, TUD.
 
@@ -56,6 +55,34 @@ function get_pid {
     pid=$(${ps} | grep str2str | grep -v grep | grep ${dev} | xargs | cut -d ' ' -f1)
 }
 
+function kill_zombies {
+   ps | grep str2str | grep -v grep | grep -i "$identifier" | while read -r line; do 
+      pidinstance=$(echo $line | xargs | cut -d ' ' -f1)
+      devinstance=$(echo $line | xargs | cut -d ' ' -f7)
+      devinstance=$(echo $line | sed -e "s/.*serial:\/\/\(tty[a-zA-Z0-9]*\):.*/\\1/g")
+      if [ ! -c /dev/$devinstance ]; then
+         echo "Device /dev/$devinstance associated with pid=$pidinstance does not exist, kill this process"
+         echo `date -u +"%F %R"` ++ubxlogd Going to kill zombie proces for ${instance} with pid=${pidinstance} on ${devinstance}  >> $logfile
+         kill -9 $pidinstance 
+      else
+         echo "Device /dev/$devinstance associated with pid=$pidinstance exits, ok"
+      fi 
+   done
+}
+
+function check_runfile {
+   currentfile=${identifier}_R_`date -u +%Y%j%H??`_01H_01S_MO.ubx
+
+   echo  $( find ../run/$identifier*.ubx -mmin -1 | wc -l ) files active for $identifier
+   if [ $( find ../run/$currentfile -mmin -1 | wc -l ) -gt 0 ]; then
+      echo Currentfile $currentfile is active as expected, logging is active
+   elif [ -e ../run/$currentfile ]; then
+      echo Currentfile $currentfile exist, but is not actively written to, logging is not active
+   else
+      echo Currentfile $currentifle does not exist, logging is not active
+   fi
+}
+
 function start_deamon {
    get_pid
    if [ "$pid" != "" ] ; then
@@ -103,6 +130,7 @@ function status_deamon {
       else
          echo "ubxlogd $identifier on ${dev} (${devpath}) is not running"
       fi
+      check_runfile
    else
       echo "Currenlty running instances (or none) of ubxlogd:"
       ${ps} | grep str2str | grep -v grep 
@@ -124,6 +152,7 @@ case "${action}" in
     restart)
       echo `date -u +"%F %R"` ++Trying to restart ubxlogd $identifier  >> $logfile 
       stop_deamon
+      kill_zombies
       start_deamon
       ;;
     check)
@@ -131,8 +160,12 @@ case "${action}" in
       if [ "$pid" == "" ] ; then
          echo "Warning: ubxlogd $identifier on ${dev} is not running, will try to restart deamon"
          echo `date -u +"%F %R"` **Warning: ubxlogd $identifier on ${dev} is not running, will try to restart deamon  >> $logfile 
+         kill_zombies
          start_deamon
       fi
+      ;;
+    kill_zombies)
+      kill_zombies
       ;;
     status)
       status_deamon
