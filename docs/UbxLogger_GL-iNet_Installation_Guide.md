@@ -146,9 +146,7 @@ To install `UbxLogger` :
 
    This will create the basic directory structure, with scripts and example configuration files.
 
-3. Change directory to the `ubxlogger` directory 
-
-   >  cd ubxlogger
+3. Change directory to the `ubxlogger` with `cd ubxlogger`
 
 4. Download the precompiled executable files from `github` and unpack
 
@@ -157,7 +155,7 @@ To install `UbxLogger` :
 
    This will install the executables in the `ubxlogger/bin` directory. `openwrt-mips` is the architecture used by the `GL-iNet X750`.  For other systems and OS change the download accordingly. Currently available executables are `openwrt-mips` and `raspberry-pi`. 
 
-5. Enable cron and create symbolic links
+5. Create symbolic links
 
    > ./sys/openwrt-mips/scripts/install.sh
 
