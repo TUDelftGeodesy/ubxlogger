@@ -8,7 +8,7 @@
 # All user defined and OS related settings are in ubxlogger.config
 
 ubxscriptdir=$(dirname "$(readlink -f "$0")")
-source ${ubxscriptdir}/ubxlogger.config
+. ${ubxscriptdir}/ubxlogger.config
 
 #-------------------------------------------------------------------------
 
@@ -44,19 +44,19 @@ logfile=${logdir}/ubxpurge.log
 # Determine how much diskspace is used
 
 diskusage=$(df ${archivedir} | tail -1 | xargs | cut -d " " -f 5)
-diskusage=${diskusage/%/}
+diskusage=${diskusage%\%}
 
 # Check the disk usage and if necessary delete the oldest data
 
 if [ ${diskusage} -ge ${max_disk_usage} ]; then
    echo "Current disk usage of ${archivedir} (${diskusage}%) is above maximum of ${max_disk_usage}%, need to purge data."
-   echo `date -u +"%F %R"` "Current disk usage of ${archivedir} (${diskusage}%) is above maximum of ${max_disk_usage}%, need to purge data." >> ${logfile}
-   candidates=`find ${archivedir}/*/  -maxdepth 1 -mindepth 1 -mtime +${min_days_to_keep} | sort`
+   echo $(date -u +"%F %R") "Current disk usage of ${archivedir} (${diskusage}%) is above maximum of ${max_disk_usage}%, need to purge data." >> ${logfile}
+   candidates=$(find ${archivedir}/*/  -maxdepth 1 -mindepth 1 -mtime +${min_days_to_keep} | sort)
    #echo $candidates
-   daycount=0 
+   daycount=0
    for d in ${candidates}; do
       echo "Purge ubx data files $d/*_MO.ubx.gz"
-      echo `date -u +"%F %R"` "Purge ubx data files $d/*_MO.ubx.gz" >> ${logfile}
+      echo $(date -u +"%F %R") "Purge ubx data files $d/*_MO.ubx.gz" >> ${logfile}
       rm $d/*_MO.ubx.gz
       rmdir $d
       daycount=$((daycount+1))
@@ -66,23 +66,23 @@ if [ ${diskusage} -ge ${max_disk_usage} ]; then
       fi
       # stop when disk size is below the limit after deleting minimum number of days
       diskusage=$(df ${archivedir} | tail -1 | xargs | cut -d " " -f 5)
-      diskusage=${diskusage/%/}
+      diskusage=${diskusage%\%}
       if [ $daycount -ge ${min_days_to_delete} ] && [ ${diskusage} -ge ${max_disk_usage} ]; then
          break
       fi
    done
    echo "Disk usage of ${archivedir} is reduced to ${diskusage}% after deleting ${daycount} days of data."
-   echo `date -u +"%F %R"` "Disk usage of ${archivedir} is reduced to ${diskusage}% after deleting ${daycount} days of data." >> ${logfile}
+   echo $(date -u +"%F %R") "Disk usage of ${archivedir} is reduced to ${diskusage}% after deleting ${daycount} days of data." >> ${logfile}
 else
    echo "No need to purge data on ${archivedir}, current disk usage of ${diskusage}% is below maximum of ${max_disk_usage}%."
 fi
 
 # Check the log file size and start a new one if the size exceeds the limit
 
-for f in `find ${logdir}/*.log -size +${max_logfile_size}`; do
-   logarchive=${f/.log/}_`date +%Y%m%d`.log
+for f in $(find ${logdir}/*.log -size +${max_logfile_size}); do
+   logarchive=${f%.log}_$(date +%Y%m%d).log
    echo "Archive logfile $f to ${logarchive}.gz"
-   echo `date -u +"%F %R"` "Archive logfile $f to ${logarchive}.gz" >> ${logfile}
+   echo $(date -u +"%F %R") "Archive logfile $f to ${logarchive}.gz" >> ${logfile}
    mv $f $logarchive
    gzip $logarchive
 done

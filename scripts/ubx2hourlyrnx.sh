@@ -6,8 +6,6 @@
 
 # paths to programs
 
-#convbin="/c/Programs/rtklib_demo5_b34g/convbin.exe"
-#rnx2crx="/c/bin/rnx2crx.exe" 
 convbin=convbin
 rnx2crx=rnx2crx
 
@@ -16,6 +14,7 @@ rnx2crx=rnx2crx
 hatanaka=no
 convopt="-ht NON_GEODETIC -hr \" /UBLOX ZED-F9P/ \" -ha \" /ANN-MB-00\""
 
+ALLOPTS=""
 while getopts ":hc:z" options; do
   case "${options}" in
     c)
@@ -27,9 +26,11 @@ while getopts ":hc:z" options; do
          echo "Config file $configfile does not exist, quiting..."
          exit 1
       fi
+      ALLOPTS="${ALLOPTS} -c ${OPTARG}"
       ;;
     z)
       hatanaka=yes
+      ALLOPTS="${ALLOPTS} -z"
       ;;
     h|\?)
       echo "Create hourly rinex3 file from ubx file(s)."
@@ -51,7 +52,6 @@ while getopts ":hc:z" options; do
       ;;
   esac
 done
-ALLOPTS="${@:1:$((OPTIND-1))}"
 
 shift $((OPTIND-1))
 
@@ -83,16 +83,16 @@ fi
 # Optionally decompress ubx file
 
 deleteubx="no"
-if [ "${filename: -3}" == ".gz" ]; then
+if [ ".${filename##*.}" = ".gz" ]; then
    echo "Decompress input ubxfile ${filename}"
-   filename=${filename/.gz/}
+   filename=${filename%.gz}
    gunzip -c ${ubxfile} > ${filename} || { echo "Error gzip decompression ${ubxfile}, quiting..." ; exit 3 ; }
    if [ $? -eq 0 ]; then
       orgfile=${ubxfile}
       ubxfile=${filename}
       deleteubx="yes"
    fi
-fi 
+fi
 
 # Parse rinex version 3 for marker name and date info
 
@@ -101,23 +101,25 @@ rem=${filename#*_?_}
 yeardoyhhmm=${rem%%_*}
 rem=${rem#*_}
 
-year=${yeardoyhhmm:0:4}
-doy=${yeardoyhhmm:4:3}
-hour=${yeardoyhhmm:7:2}
+#year=${yeardoyhhmm:0:4}
+#doy=${yeardoyhhmm:4:3}
+#hour=${yeardoyhhmm:7:2}
+year=${yeardoyhhmm%%???????}
+doy=${yeardoyhhmm#????};doy=${doy%%????}
+hour=${yeardoyhhmm#???????};hour=${hour%%??}
 
 # Get the start and end time (ubx files have some data before and after)
 
-ymd=`date -d "${year}/01/01 + $(($doy-1)) days" +%Y/%m/%d 2> /dev/null`
+ymd=$(date -d "${year}/01/01 + $(($doy-1)) days" +%Y/%m/%d 2> /dev/null)
 if [ $? -eq 0 ]; then
    # date is probably gnu date
    ts="${ymd} ${hour}:00:00"
-   te=`date -d "$ts + hour" +"%Y/%m/%d %H:%M:%S"`
+   te=$(date -d "$ts + hour" +"%Y/%m/%d %H:%M:%S")
 else
    # date is not gnu date, probably Busybox, +hour and +days not supported
-   ts=`date -d "${year}-01-${doy} ${hour}:00:00" +"%Y/%m/%d %H:%M:%S"`
-   dhour=${hour:0:1}
-   dhour=${dhour/0/}${hour:1}
-   te=`date -d "${year}-01-${doy} $((${dhour}+1)):00:00" +"%Y/%m/%d %H:%M:%S"`
+   ts=$(date -d "${year}-01-${doy} ${hour}:00:00" +"%Y/%m/%d %H:%M:%S")
+   dhour=${hour#0}
+   te=$(date -d "${year}-01-${doy} $((${dhour}+1)):00:00" +"%Y/%m/%d %H:%M:%S")
 fi
 
 #echo $year $doy $hour $ymd 
@@ -132,26 +134,26 @@ echo ${convbin} -os -od -f 5 -v 3.03 -tt 0.1 -ts $ts -te $te -hm "$marker" -hn "
 eval ${convbin} -os -od -f 5 -v 3.03 -tt 0.1 -ts $ts -te $te -hm "$marker" -hn "$marker" ${convopt} ${ubxfile}
 if [ $? -eq 0 ]; then
    # rename observation and navigation files to meet rinex filenaming convention
-   mv ${filename/MO.ubx/MO.obs} ${filename/MO.ubx/MO.rnx}
-   if [ -f ${filename/MO.ubx/MO.nav} ]; then
-      mv ${filename/MO.ubx/MO.nav} ${filename/01S_MO.ubx/MN.rnx}
+   mv ${filename%MO.ubx}MO.obs ${filename%MO.ubx}MO.rnx
+   if [ -f ${filename%MO.ubx}MO.nav ]; then
+      mv ${filename%MO.ubx}MO.nav ${filename%01S_MO.ubx}MN.rnx
    fi
    # compress the files (optional)
-   if [ "${hatanaka}" == "yes" ]; then
-      echo Compress output rinex files 
-      ${rnx2crx} -f ${filename/MO.ubx/MO.rnx}
+   if [ "${hatanaka}" = "yes" ]; then
+      echo Compress output rinex files
+      ${rnx2crx} -f ${filename%MO.ubx}MO.rnx
       if [ $? -eq 0 ]; then
-         rm ${filename/MO.ubx/MO.rnx} || echo "Error removing temporary rinex file ${filename/MO.ubx/MO.rnx}"
+         rm ${filename%MO.ubx}MO.rnx || echo "Error removing temporary rinex file ${filename%MO.ubx}MO.rnx"
       else
-         echo "Error Hatanaka compression ${filename/MO.ubx/MO.rnx}, quiting..."
+         echo "Error Hatanaka compression ${filename%MO.ubx}MO.rnx, quiting..."
          exit 5
       fi
-      gzip -f ${filename/MO.ubx/MO.crx} || { echo "Error gzip compression ${filename/MO.ubx/MO.crx}" ; exit 6 ; }
-      if [ -f ${filename/01S_MO.ubx/MN.rnx} ]; then
-         gzip -f ${filename/01S_MO.ubx/MN.rnx} || { echo "Error gzip compression ${filename/01S_MO.ubx/MN.rnx}" ; exit 6 ; }
+      gzip -f ${filename%MO.ubx}MO.crx || { echo "Error gzip compression ${filename%MO.ubx}MO.crx" ; exit 6 ; }
+      if [ -f ${filename%01S_MO.ubx}MN.rnx ]; then
+         gzip -f ${filename%01S_MO.ubx}MN.rnx || { echo "Error gzip compression ${filename%01S_MO.ubx}MN.rnx" ; exit 6 ; }
       fi
    fi
-   if [ "${deleteubx}" == "yes" ] && [ "${orgfile}" !=  "${ubxfile}" ]; then
+   if [ "${deleteubx}" = "yes" ] && [ "${orgfile}" !=  "${ubxfile}" ]; then
       # delete uncompressed ubxfile
       echo "Remove temporary decompressed input ubxfile"
       rm ${ubxfile} || echo "Error removing ${ubxfile}"

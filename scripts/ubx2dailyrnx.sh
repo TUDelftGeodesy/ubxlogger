@@ -6,8 +6,6 @@
 
 # paths to programs
 
-#convbin="/c/Programs/rtklib_demo5_b34g/convbin.exe"
-#rnx2crx="/c/bin/rnx2crx.exe" 
 convbin=convbin
 rnx2crx=rnx2crx
 
@@ -81,15 +79,17 @@ for ubxfile in ${ubxfiles}; do
    rem=${filename#*_?_}
    yeardoyhhmm=${rem%%_*}
    rem=${rem#*_}
-   curyear=${yeardoyhhmm:0:4}
-   curdoy=${yeardoyhhmm:4:3}
-   if [ "${filename: -3}" == ".gz" ]; then
+   #curyear=${yeardoyhhmm:0:4}
+   #curdoy=${yeardoyhhmm:4:3}
+   curyear=${yeardoyhhmm%???????}
+   curdoy=${yeardoyhhmm#????};curdoy=${curdoy%????}
+   if [ ".${filename##.}" = ".gz" ]; then
       curcompressed="yes"
    else
       curcompressed="no"
    fi
   # Check that all files are for the same marker and days and have same compression state
-   if [ "${marker}" == "" ]; then
+   if [ "${marker}" = "" ]; then
       marker=${curmarker}
       year=${curyear}
       doy=${curdoy}
@@ -103,42 +103,38 @@ for ubxfile in ${ubxfiles}; do
 done
 
 # Set output file basename
- 
+
 filename=${marker}_R_${year}${doy}0000_01D_${intv}S_MO.ubx
- 
+
 # Concatenate all input ubx files
 
-if [ ${compressed} == "yes" ]; then
+if [ ${compressed} = "yes" ]; then
    zcat ${ubxfiles} > ${filename}
 else
-   cat ${ubxfiles} > ${filename} 
+   cat ${ubxfiles} > ${filename}
 fi
 if [ $? -ne 0 ]; then
-    echo "Some input files are missing or corrupt, check your input arguments and try again." 
+    echo "Some input files are missing or corrupt, check your input arguments and try again."
     if [ -f ${filename} ] ; then
         rm ${filename} || echo "Error deleting concattenated ubx file."
     fi
-    exit 2 
+    exit 2
 fi
 # Get the start and end time (ubx files have some data before and after)
 
-ymd=`date -d "${year}/01/01 + $(($doy-1)) days" +%Y/%m/%d 2> /dev/null`
+ymd=$(date -d "${year}/01/01 + $(($doy-1)) days" +%Y/%m/%d 2> /dev/null)
 if [ $? -eq 0 ]; then
     # date is probably gnu date
     ts="${ymd} 00:00:00"
-    te=`date -d "$ts + day" +"%Y/%m/%d %H:%M:%S"`
+    te=$(date -d "$ts + day" +"%Y/%m/%d %H:%M:%S")
 else
     # date is not gnu date, probably Busybox, +hour and +days not supported
-    ts=`date -d "${year}-01-${doy} 00:00:00" +"%Y/%m/%d %H:%M:%S"`
-    #ddoy=${doy:0:1}
-    #ddoy=${ddoy/0/}${doy:1}
-    #dddoy=${ddoy:0:1}
-    #ddoy=${dddoy/0/}${ddoy:1}
+    ts=$(date -d "${year}-01-${doy} 00:00:00" +"%Y/%m/%d %H:%M:%S")
     ddoy=$(echo ${doy} | sed 's/^0*//')
-    te=`date -d "${year}-01-$((${ddoy}+1)) 00:00:00" +"%Y/%m/%d %H:%M%S"`
+    te=$(date -d "${year}-01-$((${ddoy}+1)) 00:00:00" +"%Y/%m/%d %H:%M%S")
 fi
 
-#echo $year $doy $ymd 
+#echo $year $doy $ymd
 #echo $ts
 #echo $te
 
@@ -148,23 +144,23 @@ echo ${convbin} -os -od -f 5 -v 3.03 -tt 0.1 -ts $ts -te $te -ti ${intv} -hm "$m
 eval ${convbin} -os -od -f 5 -v 3.03 -tt 0.1 -ts $ts -te $te -ti ${intv} -hm "$marker" -hn "$marker" ${convopt} ${filename}
 if [ $? -eq 0 ]; then
    # rename observation and navigation files to meet rinex filenaming convention
-   mv ${filename/MO.ubx/MO.obs} ${filename/MO.ubx/MO.rnx}
-   if [ -f ${filename/MO.ubx/MO.nav} ]; then
-      mv ${filename/MO.ubx/MO.nav} ${filename/${intv}S_MO.ubx/MN.rnx}
+   mv ${filename%MO.ubx}MO.obs ${filename%MO.ubx}MO.rnx
+   if [ -f ${filename%MO.ubx}MO.nav ]; then
+      mv ${filename%MO.ubx}MO.nav ${filename%${intv}S_MO.ubx}MN.rnx
    fi
    # compress the files (optional)
-   if [ "${hatanaka}" == "yes" ]; then
+   if [ "${hatanaka}" = "yes" ]; then
       echo Compress output rinex files
-      ${rnx2crx} -f ${filename/MO.ubx/MO.rnx}
+      ${rnx2crx} -f ${filename%MO.ubx}MO.rnx
       if [ $? -eq 0 ]; then
-         rm ${filename/MO.ubx/MO.rnx} || echo "Error removing temporary rinex file ${filename/MO.ubx/MO.rnx}"
+         rm ${filename%MO.ubx}MO.rnx || echo "Error removing temporary rinex file ${filename%MO.ubx}MO.rnx"
       else
-         echo "Error Hatanaka compression ${filename/MO.ubx/MO.rnx}, quiting..."
+         echo "Error Hatanaka compression ${filename%MO.ubx}MO.rnx, quiting..."
          exit 5
       fi
-      gzip -f ${filename/MO.ubx/MO.crx} || { echo "Error gzip compression ${filename/MO.ubx/MO.crx}"; exit 6 ; }
-      if [ -f ${filename/${intv}S_MO.ubx/MN.rnx} ]; then
-         gzip -f ${filename/${intv}S_MO.ubx/MN.rnx} || { echo "Error gzip compression ${filename/${intv}S_MO.ubx/MN.rnx}"; exit 6 ; }
+      gzip -f ${filename%MO.ubx}MO.crx || { echo "Error gzip compression ${filename%MO.ubx}MO.crx"; exit 6 ; }
+      if [ -f ${filename%${intv}S_MO.ubx}MN.rnx ]; then
+         gzip -f ${filename%${intv}S_MO.ubx}MN.rnx || { echo "Error gzip compression ${filename%${intv}S_MO.ubx}MN.rnx"; exit 6 ; }
       fi
    fi
    # delete uncompressed ubxfile
