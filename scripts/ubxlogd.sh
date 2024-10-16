@@ -79,7 +79,7 @@ check_runfile() {
    elif [ -e ${rundir}/$currentfile ]; then
       echo Currentfile $currentfile exist, but has not recently been written to, logging not active
    else
-      echo Currentfile $currentifle does not exist, logging not active
+      echo Currentfile $currentfile does not exist, logging not active
    fi
 }
 
@@ -90,7 +90,7 @@ start_deamon() {
       echo $(date -u +"%F %R") ++ubxlogd $identifier on ${dev} is already running with pid=$pid, nothing to do >> $logfile
    else
       $str2str -in serial://${dev}:57600#ubx -out file://${rundir}/${identifier}_R_%Y%n%h%M_01H_01S_MO.ubx::S=1  > /dev/null 2>&1 &
-      sleep 3
+      sleep 5
       get_pid
       if [ "$pid" != "" ] ; then
          echo "ubxlogd $identifier on ${dev} is succesfully started with pid=$pid"
