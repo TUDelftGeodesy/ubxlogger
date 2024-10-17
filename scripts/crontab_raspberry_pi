@@ -19,7 +19,7 @@
 # Raspberry Pi
 # ------------
 # On Raspberry Pi add $HOME/bin to the path (crontab does not support environment var)
-# PATH=/home/pi/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PATH=/home/pi/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 #
 # Scheduled tasks
 # ---------------
@@ -33,7 +33,7 @@
 #    the disk is almost full 
 #
 # m h  dom mon dow   command
-#@reboot sleep 60 && /mnt/sda1/ubxlogger/scripts/ubxlogd.sh start TEST00NLD >> /dev/null 2>&1
+@reboot sleep 60 && /mnt/sda1/ubxlogger/scripts/ubxlogd.sh start TEST00NLD >> /dev/null 2>&1
 07 * * * * /mnt/sda1/ubxlogger/scripts/ubxpush.sh TEST00NLD >> /dev/null 2>&1
 17 2 * * * /mnt/sda1/ubxlogger/scripts/rnxpush.sh TEST00NLD >> /dev/null 2>&1
 56 * * * * /mnt/sda1/ubxlogger/scripts/ubxlogd.sh check TEST00NLD >> /dev/null 2>&1

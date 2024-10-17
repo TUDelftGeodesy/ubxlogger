@@ -34,6 +34,34 @@ In this document the hardware setup is described for two example configurations
 - The GL-iNet X750V2 (Spitz) OpenWrt 4G router
 - Raspberry Pi single board computer with Teltonika RUT240 4G router
 
+First we need to configure the receiver.
+
+## U-blox ZED-F9P configuration
+
+UbxLogger uses the USB port of the ZED-F9P to power the receiver and stream data. The receiver
+must first be configured to send raw measurement data to the USB port. We use u-center for this task.
+
+1. Connect the receiver to an USB port on your computer, start u-center and connect to the receiver using
+the proper COM port.
+2. Open `View->Messages View`, select `UBX-MON-VER` in the left pane, and check that the firmware version is `1.32` or higher. If not, upgrade
+the firmware to version 1.32.
+3. Open `View->Generation 9 Configuration View`, deselect `SBAS` and `QZSS` (unless you really want this data), and send configuration to
+RAM+BBR+Flash
+4. Open `View->Configuration View`
+
+   - In the left pane select `MSG (Messages)`, in the right pane select `02-15 RXM-RAWX` and tick `USB`, and press `Send` in the taskbar.
+   - In the left pane select `PRT (Ports)`, in the right pane select as target `3-USB` and change `Protocol out` to `0-UBX`, and press `Send` in the taskbar.
+     This will disable NMEA output to the USB port, with as side effect that the time and satellite data in u-center is not updated anymore.
+   - In the left pane select `CFG (Configuration)`, and press `Send` in the taskbar. This will store the configuration in BBR and Flash.
+
+5. Open  `View->Packet Console`, and check that `UBX RXM-RAWX` messages are send every second (and nothing else). 
+
+This will provide the minimal amount of information to generate RINEX observation files.
+
+If you want you can also select to output `02-13 RXM-SFRBX` so that also RINEX navigation files can be created.
+However, this will generate a lot of additional data for something you can also download from other sources. To
+save space, we recommend only to log  `02-15 RXM-RAWX` messages.
+
 ## GL-iNet X750V2 OpenWrt router
 
 The `GL-X750V2` Spitz is a 3G/4G dual-band wireless router running OpenWRT OS. It has built-in mini PCIe 3G/4G 
