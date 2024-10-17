@@ -86,7 +86,7 @@ echo "The software is now installed with the default directory structure in ${ub
 echo ""
 echo "To create symbolic links, install packages and enable services use the commands"
 echo ""
-echo "    cd ${ubxdir}"
+echo "    cd ${sdcard}/${ubxdir}"
 echo "    ./sys/openwrt-mips/scripts/ubxlogger_install_part2.sh"
 echo ""
 echo "For other platforms replace 'openwrt-mips' with one of the architectures provided"
