@@ -19,7 +19,7 @@ echo ""
 # set defaults
 
 sdcard="/mnt/sda1"
-release="v1.0-alpha"
+release="v1.0"
 gittag="main"
 
 # ask user for input and confirmation
@@ -47,9 +47,9 @@ while true; do
 done
 
 echo ""
-echo "Downloading 'UbxLogger' software form 'github'..."
+echo "Downloading 'UbxLogger' software form 'github' to ${sdcard}..."
 
-echo cd ${sdcard}
+cd ${sdcard}
 if [ "${gittag}" = "main" ]; then
    curl -L https://github.com/hvandermarel/ubxlogger/archive/main.tar.gz -o ubxlogger-main.tar.gz 
 else
