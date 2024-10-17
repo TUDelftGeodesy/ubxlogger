@@ -80,6 +80,7 @@ echo "Download the precompiled executable files from 'github' and unpack to 'bin
 cd ${ubxdir}
 curl -L https://github.com/hvandermarel/ubxlogger/releases/download/${release}/openwrt-mips-bin.tar.gz -o ./openwrt-mips.tar.gz
 tar -xzf openwrt-mips.tar.gz
+chmod a+x bin/str2str bin/convbin bin/rnx2crx bin/crx2rnx 
 
 echo ""
 echo "The software is now installed with the default directory structure in ${ubxdir}."

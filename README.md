@@ -1,18 +1,20 @@
 # UbxLogger
 
-**Hans van der Marel, TU Delft, September, 2024.**
-
 U-blox ZED-F9P GNSS logging scripts for OpenWrt and Single Board Computers.
-
-**The current version, `1.0-alpha`, is under active development, intended only for 
-internal testing, and the information displayed in the documentation may not always be up to date. 
-The next stable release is planned for mid October 2024.** 
 
 ## What is UbxLogger?
 
 `UbxLogger` is a suite of shell scripts and executables for logging data from a U-blox 
 ZED-F9P low cost GNSS receiver on OpenWrt routers and Single Board Computers such as the
 Raspberry Pi. 
+
+<figure>
+    <img src="docs/Weerribben.jpg" width="600" 
+         alt="Weerribben GNSS logger">
+    <figcaption>Example UbxLogger installation for monitoring subsidence and uplift in a peat area, with on the left
+    the GNSS antenna and on the right the internals of the cabinet with U-blox ZED-F9P, GL-iNet OpenWrt router,
+    solar charge controler and LiPo4 batteries.</figcaption>
+</figure>
 
 Some of the things you can do with `UbxLogger` are
 
@@ -28,6 +30,7 @@ You have have the choice to create compressed RINEX files on OpenWrt (or SBC) an
 the remote server, and/or push ubx rawdata files to the remote server and convert to RINEX on
 the remote server. To transfer the compressed RINEX files, especially at a lower sample rate, requires 
 only a fraction of the bandwith compared to ubx. 
+
 
 ## How to use UbxLogger
 
@@ -45,6 +48,13 @@ Instructions on using the software, hardware recommendations, and installation i
 given in the `docs/` folder.
 
 Scripts, executables and modified source code are available as releases on this Github repository. 
+
+To install the UbxLogger software download the installation script, run and follow the instructions
+
+> curl -L https://github.com/hvandermarel/ubxlogger/raw/refs/heads/main/sys/ubxlogger_install_part1.sh -o install.sh \
+> ./install.sh
+
+For more information on the installation and configuring the software see the manuals.
 
 ## Copyright and licence
 

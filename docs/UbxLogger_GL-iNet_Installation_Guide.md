@@ -107,69 +107,49 @@ and click on `Save`. Then click on `Save and Apply` to complete the process.
 Now you should be able to see the mounted SD card under Mounted file systems and the
 SD card is ready to be used. 
 
-### str2str plug-in
 
-There are plug-ins for RTLKIB's `str2str` and `convbin`. The `str2str` plug-in is working
-quite well.  However, though the `convbin` plug-in installs and does not crash, it 
-fails to convert ZED-F9P raw data files to RINEX. The reason for this is that `ublox.c`, which deals with decoding raw U-blox data, and is used by `convbin` and other RTKLIB applications, does not work on big endian systems out of the box.  
+## Download and install `UbxLogger` software
 
-To get started quickly install - after updating the package list - the `str2str` plug-in. 
+To install the `UbxLogger` software download the installation script, run and follow the instructions
 
-> opkg update\
-> opkg install str2str
+> curl -L https://github.com/hvandermarel/ubxlogger/raw/refs/heads/main/sys/ubxlogger_install_part1.sh -o install.sh \
+> ./install.sh
 
-The plugin needs to be reinstalled after a firmware update.
+The script will guide you step by step through the installation process providing sensible defaults. When the script
+finishes the software and executable are installed on the micro SD card, and the user is provided with some
+guidance on how to preceed with the second part of the installation.
 
-If you want also to convert raw data file into RINEX then you need cross compiled versions of 
-RTKLIB's `convbin`, using modified source code for `ublox.c`, and Hatanaka's `rnx2crx`. 
-See the section on cross-compiling on how to achieve this. Compiled versions for the GL-iNet are 
-available as downloads. 
+The second part of the installation is done by a separate script that is installed along with
+the software. To run the second part of the install
+
+>   cd /mnt/sda1/ubxlogger \
+>   ./sys/openwrt-mips/scripts/ubxlogger_install_part2.sh
+
+For other platforms replace *openwrt-mips* with one of the architectures provided in the `ubxdir/sys` folder.
+
+Thi script will create symbolic links to the executable and scripts installed during the first step, install 
+necessary packages, enable crontab and add a service (`cronatreboot`) to resume logging after a reboot. 
+
+The script will provide you with the option to install RTKLIB's `str2str` using an OpenWrt package or 
+to a more recent `str2str` that comes with this download. We recommend to use the OpenWrt package.    
+
+**Important note**: The second part of the install must be repeated after a firmware upgrade! A firmware
+upgrade will install a clean system and all additions to the system directories are lost. The ubxlogger 
+software itself, which is installed on the microSD card, will not be erased by a firmware update.
+
+More details on the installation process are provided in Appendix I.
 
 ## Set up `UbxLogger`
 
-## Installing
-
-To install `UbxLogger` :
-
-1. Change directory to the sd card root with `cd /mnt/sda1/`
-2. Download the `UbxLogger` software form `github` and unpack
-
-   >  curl -L https://github.com/hvandermarel/ubxlogger/archive/main.tar.gz -o ubxlogger.tar.gz \
-   >  tar -xzf ubxlogger.tar.gz \
-   >  mv ubxlogger-main ubxlogger
-
-   or
-
-   >  curl -L https://github.com/hvandermarel/ubxlogger/archive/refs/tags/v1.0-alpha.tar.gz -o ubxlogger.tar.gz \
-   >  tar -xzf ubxlogger.tar.gz \
-   >  mv ubxlogger-1.0-alpha ubxlogger
-
-   This will create the basic directory structure, with scripts and example configuration files.
-
-3. Change directory to the `ubxlogger` with `cd ubxlogger`
-
-4. Download the precompiled executable files from `github` and unpack
-
-   >  curl -L https://github.com/hvandermarel/ubxlogger/releases/download/v1.0-alpha/openwrt-mips-bin.tar.gz -o ./openwrt-mips.tar.gz \
-   >  tar -xzf openwrt-mips.tar.gz
-
-   This will install the executables in the `ubxlogger/bin` directory. `openwrt-mips` is the architecture used by the `GL-iNet X750`.  For other systems and OS change the download accordingly. Currently available executables are `openwrt-mips` and `raspberry-pi`. 
-
-5. Create symbolic links
-
-   > ./sys/openwrt-mips/scripts/install.sh
-
-   This step must be repeated after a firmware update. 
-
 To configure `UbxLogger`
 
-6. Choose an appropriate 9-character `identifier` for each of your systems. You need this `identifier` to
+1. Choose an appropriate 9-character `identifier` for each of your systems. You need this `identifier` to
    make settings in the configuration files. The `identifier` will also be the first part
    of the ubx and RINEX file names. 
 
    At this phase, if you don't plan on logging navigation files, it is also relevant to obtain the approximate coordinates of the receiver(s).
 
-7. Edit the script configuration file with `vi`, enter the command  `vi scripts/ubxlogger.config`, and then
+2. Edit the script configuration file with `vi`, enter the command  `vi scripts/ubxlogger.config`, and then
 
    -  Set the USB port number (device path) for one or more receivers, e.g. for a single device, without hub, it will be something like 
    
@@ -177,10 +157,10 @@ To configure `UbxLogger`
 
       with two devices, and a hub, it could be something like 
 
-      > devpath_NAMExxTS1=1.3.1\
-      > devpath_NAMExxDF1=1.3.2
+      > devpath_NAME00CCC=1.3.1\
+      > devpath_SCND00CCC=1.3.2
 
-      Replace "NAME00CCC", "NAMExxTS1" and/or "NAMExxDF1" with the appropriate `identifier` that you plan on using. The actual device numbers depend on the number of hubs and port on the hub your are using.
+      Replace "NAME00CCC" and/or "SCND00NLD" with the appropriate `identifier` that you plan on using. The actual device numbers depend on the number of hubs and port on the hub your are using.
    
    - Adjust the remote upload url's and authorizations for curl:
 
@@ -195,7 +175,7 @@ To configure `UbxLogger`
    See the [software manual][2] for detailed description of the options and instructions on how to 
    determine the USB port numbers. If you use a hub, do not forget to **label the port numbers on the hub**. 
 
-8. In case you plan to do a conversion to RINEX, as is the case in the example of the previous step, create a configuration file for each receiver in the `spool/` directory. This goes as follows
+3. In case you plan to do a conversion to RINEX, as is the case in the example of the previous step, create a configuration file for each receiver in the `spool/` directory. This goes as follows
 
    > cp spool/NAME00CCC.cfg spool/'identifier'.cfg \
    > vi spool/'identifier'.cfg
@@ -205,44 +185,29 @@ To configure `UbxLogger`
 
 In this phase of the installation process the software is fully functional and can be started and stopped manually, as is decribed in the [software manual][2]. 
 
-To automatically start tasks on the server we use the `crontab`.
+## Starting and stopping the software
 
-### Crontab
+The software can be started manually using `ubxlogd`.
 
-By default OpenWrt does not enable the cron service. To start it and enable automatic startup during subsequent reboots, you need to execute the following commands once:
+To automatically start tasks on OpenWrt we use the `cron` service, which is already enabled by the installation script.
+To use the `cron` service the user has to provide a `crontab` file.
 
-> /etc/init.d/cron start\
-> /etc/init.d/cron enable
-
-The first command starts the cron service once, but does not change the startup configuration, so it will not be started automatically after a reboot. 
-The second command changes the startup configuration (creates a symlink in `/etc/rc.d`) so that the cron service will be started during boot, 
-but does not start it immediately.
-
-Next thing, is to edit the `crontab` file in `ubxlogger/scripts`, and inform `crontab` to use this file
+Copy one of he example crontab files in `./scripts` to `./scripts/crontab`, edit this file and start using it
 
 > cd /mnt/sda1/ubxlogger/\
 > vi scripts/crontab\
 > crontab scripts/crontab
 
+Instructions are provided in the example crontab files.
+
 The crontab can be inspected with the `crontab -l` command or in the GUI `OpenWrt LuCI -> System -> Scheduled tasks`.
+You can also edit the crontab directly with `crontab -e`.
 
-`crontab` works with local time. To have this synchronized with `UTC` make sure that you're local time is set to `UTC`.
+Crontab on OpenWrt does not support the `@reboot` directive. This directive must be commented out in the `crontab`.
+The `cronatreboot` service that is installed during the second part of the install will use the commented out
+directive to start logging after a (re)boot.
 
-
-### Start on (re)boot
-
-Crontab on OpenWrt does not support the `@reboot` directive. This means that, after a (re)boot, the ubx logging is only started at the regular `ubxlogd check 'identifier'` intervals, typically every 57 minutes after the hour. Worst case scenario is that it takes one hour to start after a reboot.
-
-To enable start on (re)boot do the following
-
-1. In the crontab comment out the reboot directive with a single "#" and no spaces
-2. Add startup script to /etc/init.d to process the commented out "#@reboot" directive
-
-   > cp sys/open-wrt/scripts/cronatreboot to /etc/init.d/ \
-   > /etc/init.d/crontatreboot enable
-
-This needs to be do only once (as part of the installation procedure). After a firmware update the 
-2nd step must be done again.
+Note that `crontab` works with local time. To have this synchronized with `UTC` make sure that you're local time is set to `UTC`.
 
 ## Remote connections
 
@@ -302,7 +267,115 @@ and stopping the `ubxlogd` deamon and automated conversion and file transfer.
 
 ## Appendices
 
-## Appendix I: Cross compiling OpenWrt programs
+## Appendix I: Installation scripts
+
+The UbxLogger installation consists of two parts
+
+### ubxlogger_install_part1.sh
+
+This script will download the `UbxLogger` software and install it on the micro SD card. The typical workflow is
+to download the script from Github and then run it
+
+> curl -L https://github.com/hvandermarel/ubxlogger/raw/refs/heads/main/sys/ubxlogger_install_part1.sh -o install.sh \
+> ./install.sh
+
+The script does the following
+
+1. Change directory to the sd card root with `cd /mnt/sda1/`
+2. Download the `UbxLogger` software form `github` and unpack
+
+   >  curl -L https://github.com/hvandermarel/ubxlogger/archive/main.tar.gz -o ubxlogger.tar.gz \
+   >  tar -xzf ubxlogger.tar.gz \
+   >  mv ubxlogger-main ubxlogger
+
+   or
+
+   >  curl -L https://github.com/hvandermarel/ubxlogger/archive/refs/tags/v1.0-alpha.tar.gz -o ubxlogger.tar.gz \
+   >  tar -xzf ubxlogger.tar.gz \
+   >  mv ubxlogger-1.0-alpha ubxlogger
+
+   This will create the basic directory structure, with scripts and example configuration files.
+
+3. Change directory to the `ubxlogger` with `cd ubxlogger`
+
+4. Download the precompiled executable files from `github` and unpack
+
+   >  curl -L https://github.com/hvandermarel/ubxlogger/releases/download/v1.0-alpha/openwrt-mips-bin.tar.gz -o ./openwrt-mips.tar.gz \
+   >  tar -xzf openwrt-mips.tar.gz
+
+   This will install the executables in the `ubxlogger/bin` directory. `openwrt-mips` is the architecture used by the `GL-iNet X750`.  For other systems and OS change the download accordingly. Currently available executables are `openwrt-mips` and `raspberry-pi`. 
+
+This part of the installation process is the same for any computer architecture.
+
+### ubxlogger_install_part2.sh
+
+For the second part of the installation process a separate script is provided that is installed along with the rest of the software.
+This part is different for the various computer architectures and can be found in `ubxlogger/sys/*architecture*/scripts`.
+
+On OpenWrt a couple of tasks are performed that are described below.
+
+#### str2str plug-in
+
+There are plug-ins for RTLKIB's `str2str` and `convbin`. The `str2str` plug-in is working
+quite well.  However, though the `convbin` plug-in installs and does not crash, it 
+fails to convert ZED-F9P raw data files to RINEX. The reason for this is that `ublox.c`, which deals with decoding raw U-blox data, and is used by `convbin` and other RTKLIB applications, does not work on big endian systems out of the box.  
+
+To install - after updating the package list - the `str2str` plug-in 
+
+> opkg update\
+> opkg install str2str
+
+The plugin needs to be reinstalled after a firmware update.
+
+If you want also to convert raw data file into RINEX then you need cross compiled versions of 
+RTKLIB's `convbin`, using modified source code for `ublox.c`, and Hatanaka's `rnx2crx`. 
+See the section on cross-compiling on how to achieve this. Compiled versions for the GL-iNet are 
+available as downloads. 
+
+There is also a cross compiled version of `str2str` that you can use instead of the OpenWrt package (we recommend using the OpenWrt package).
+
+#### Cron service
+
+By default OpenWrt does not enable the cron service. To start it and enable automatic startup during subsequent reboots, you need to execute the following commands once:
+
+> /etc/init.d/cron start\
+> /etc/init.d/cron enable
+
+The first command starts the cron service once, but does not change the startup configuration, so it will not be started automatically after a reboot. 
+The second command changes the startup configuration (creates a symlink in `/etc/rc.d`) so that the cron service will be started during boot, 
+but does not start it immediately.
+
+Next thing, is to edit the `crontab` file in `ubxlogger/scripts`, and inform `crontab` to use this file
+
+> cd /mnt/sda1/ubxlogger/\
+> vi scripts/crontab\
+> crontab scripts/crontab
+
+The crontab can be inspected with the `crontab -l` command or in the GUI `OpenWrt LuCI -> System -> Scheduled tasks`.
+
+`crontab` works with local time. To have this synchronized with `UTC` make sure that you're local time is set to `UTC`.
+
+#### Start on (re)boot
+
+Crontab on OpenWrt does not support the `@reboot` directive. This means that, after a (re)boot, the ubx logging is only started at the regular `ubxlogd check 'identifier'` intervals, typically every 57 minutes after the hour. Worst case scenario is that it takes one hour to start after a reboot.
+
+To enable start on (re)boot do the following
+
+1. In the crontab comment out the reboot directive with a single "#" and no spaces
+2. Add startup script to /etc/init.d to process the commented out "#@reboot" directive
+
+   > cp sys/open-wrt/scripts/cronatreboot to /etc/init.d/ \
+   > /etc/init.d/crontatreboot enable
+
+This needs to be do only once (as part of the installation procedure). After a firmware update the 
+2nd step must be done again.
+
+#### Create symbolic links
+
+This script will install symbolic links to the executables and scripts in `/usr/bin` and to `ubxlogger` in the root home directory.
+
+
+## Appendix II: Cross compiling OpenWrt programs
 
 To cross compile a C program for OpenWrt you need a linux system for making the `OpenWrt build environment`. 
 Ubuntu is an obvious choice. Windows 10 users can use Windows Subsystem for Linux.
@@ -386,7 +459,7 @@ Install the OpenWrt development environment with cross-compiles
 > tar -cf openwrt-mips.tar openwrt-mips/*
 
 
-## Appendix II: Differences with other models (and brands)
+## Appendix III: Differences with other models (and brands)
 
 Spitz (GL-X750V2) is the advanced version of older model Spitz (GL-X750). It comes with the redesigned PCBA and optimized 
 antennas to improve the 4G performance.GL-iNet 4G routers support 

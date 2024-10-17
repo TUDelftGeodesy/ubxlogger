@@ -110,6 +110,7 @@ if [ ! -e /etc/init.d/cronatreboot ]; then
                echo Enabling cron and installing cronatroot in /etc/init.d
                cp ${scriptdir}/cronatreboot /etc/init.d/
                /etc/init.d/cron enable
+               /etc/init.d/cron start
                /etc/init.d/cronatreboot enable
                break;;
             [Nn]* ) break;;
