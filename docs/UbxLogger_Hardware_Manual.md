@@ -53,6 +53,7 @@ optionally send it to an upstream server using the 4G connection.
     <figcaption>GL-iNet basic GNSS logger with a single U-blox ZED-F9P.</figcaption>
 </figure>
 
+\
 With an additional USB hub the router can log data from more than one receiver. 
 
 <figure>
@@ -61,6 +62,7 @@ With an additional USB hub the router can log data from more than one receiver.
     <figcaption>GL-iNet dual GNSS logger with two U-blox ZED-F9P's.</figcaption>
 </figure>
 
+\
 The GL-iNet router has three main user interfaces
 
 1. GL-iNet Web Admin Panel (http://192.168.8.1)
