@@ -45,7 +45,7 @@ The executables are made available under their own license.
 
 RTKLIB str2str and convbin are available under BSD 2-clause
 license (http://opensource.org/licenses/BSD-2-Clause) and additional two
-exclusive clauses, see [LICENSE_RTKLIB](LICENSE_RTKLIB.txt) for the full license.
+exclusive clauses, see [bin/LICENSE_RTKLIB](LICENSE_RTKLIB.txt) for the full license.
 
 The software was cross-compiled for OpenWrt-mips by the author of this document, using 
 source code from RTKLIB demo5 b34k (https://github.com/rtklibexplorer/RTKLIB/releases)
@@ -57,7 +57,7 @@ under the same BSD clauses and compatible with the Apache 2 license of UbxLogger
 RNXCMP rnx2crx and crx2rnx are available under Geospatial Information 
 Authority of Japan Website Terms of Use, 
 https://www.gsi.go.jp/ENGLISH/page_e30286.html (except for provision 1-a),
-see [LICENSE_RNXCMP](LICENSE_RNXCMP.txt) for the full text of the license. The reference
+see [bin/LICENSE_RNXCMP](LICENSE_RNXCMP.txt) for the full text of the license. The reference
 to the software is [Hatanaka, 2008][1]. 
 
 The software was cross compiled for OpenWrt-mips by the author of this document, using 

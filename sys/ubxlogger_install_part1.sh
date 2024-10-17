@@ -51,13 +51,13 @@ echo "Downloading 'UbxLogger' software form 'github'..."
 
 echo cd ${sdcard}
 if [ "${gittag}" = "main" ]; then
-   echo curl -L https://github.com/hvandermarel/ubxlogger/archive/main.tar.gz -o ubxlogger-main.tar.gz 
+   curl -L https://github.com/hvandermarel/ubxlogger/archive/main.tar.gz -o ubxlogger-main.tar.gz 
 else
-   echo curl -L https://github.com/hvandermarel/ubxlogger/archive/refs/tags/${release}.tar.gz -o ubxlogger-${release}.tar.gz 
+   curl -L https://github.com/hvandermarel/ubxlogger/archive/refs/tags/${release}.tar.gz -o ubxlogger-${release}.tar.gz 
 fi
 echo ""
 echo "Installing 'UbxLogger' ..."
-echo tar -xzf ubxlogger-${gittag}.tar.gz 
+tar -xzf ubxlogger-${gittag}.tar.gz 
 
 ubxdir="ubxlogger-${gittag}"
 
@@ -69,7 +69,7 @@ echo ""
 while true; do
     read -p "Move ${ubxdir} to ubxlogger [yN]? " tmpinput
     case $tmpinput in
-        [Yy]* ) echo mv -i $ubxdir ubxlogger; ubxdir="ubxlogger"; break;;
+        [Yy]* ) mv -i $ubxdir ubxlogger; ubxdir="ubxlogger"; break;;
         [Nn]* ) break;;
         * ) echo "Please answer yes or no.";;
     esac
@@ -77,9 +77,9 @@ done
 
 echo "Download the precompiled executable files from 'github' and unpack to 'bin/' folder"
 
-echo cd ${ubxdir}
-echo curl -L https://github.com/hvandermarel/ubxlogger/releases/download/${release}/openwrt-mips-bin.tar.gz -o ./openwrt-mips.tar.gz
-echo tar -xzf openwrt-mips.tar.gz
+cd ${ubxdir}
+curl -L https://github.com/hvandermarel/ubxlogger/releases/download/${release}/openwrt-mips-bin.tar.gz -o ./openwrt-mips.tar.gz
+tar -xzf openwrt-mips.tar.gz
 
 echo ""
 echo "The software is now installed with the default directory structure in ${ubxdir}."
