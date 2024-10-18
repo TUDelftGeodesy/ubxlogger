@@ -11,10 +11,10 @@ Raspberry Pi.
 <figure>
    <img src="docs/Weerribben.jpg" width="600" 
          alt="Weerribben GNSS logger">
-   <figcaption><em><small>Example UbxLogger installation for monitoring subsidence and uplift in a 
+   <figcaption><em><span style="font-size:0.8em">Example UbxLogger installation for monitoring subsidence and uplift in a 
       peat area, with on the left the GNSS antenna and on the right the internals of the cabinet 
       with U-blox ZED-F9P, GL-iNet OpenWrt router, solar charge controler and LiPo4 batteries.
-    </small></em></figcaption>
+    </span></em></figcaption>
 </figure>
 
 \
