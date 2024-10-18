@@ -11,9 +11,10 @@ Raspberry Pi.
 <figure>
    <img src="docs/Weerribben.jpg" width="600" 
          alt="Weerribben GNSS logger">
-   <figcaption>Example UbxLogger installation for monitoring subsidence and uplift in a peat    area, with on the left
-   the GNSS antenna and on the right the internals of the cabinet with U-blox ZED-F9P, GL-iNet OpenWrt router,
-   solar charge controler and LiPo4 batteries.</figcaption>
+   <figcaption><em><small>Example UbxLogger installation for monitoring subsidence and uplift in a 
+      peat area, with on the left the GNSS antenna and on the right the internals of the cabinet 
+      with U-blox ZED-F9P, GL-iNet OpenWrt router, solar charge controler and LiPo4 batteries.
+    </small></em></figcaption>
 </figure>
 
 \
@@ -72,6 +73,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+The current release is at `v1.0`.
 
 ## Further reading
 
