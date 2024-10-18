@@ -66,7 +66,7 @@ The GL-iNet router has three main user interfaces
 
 1. GL-iNet Web Admin Panel (http://192.168.8.1)
 2. OpenWrt LuCI web user interface (http://192.168.8.1/cgi-bin/luci)
-3. SSH to the router BusyBox ash shell ()`ssh root@192.168.8.1`)
+3. SSH to the router BusyBox ash shell (`ssh root@192.168.8.1`)
 
 The first is a Grafical User Interface (GUI) for standard settings
 and firmware upgrades. The second is a GUI to do more advanced settings with `OpenWrt LuCI`. Many
@@ -77,6 +77,11 @@ which will be used for setting up regular Linux stuff and `UbxLogger`.
 
 Plug-ins can be installed from the `GL-iNet Web Admin Panel -> Applications -> Plug-ins`,
 or from `OpenWrt LuCI -> System -> Software`, or from the CLI using  the `oplg` package manager.
+At this time it is a good idea to update the package list and install `usbutils` (for the `lsusb` 
+command)
+
+> opkg update\
+> opkg install usbutils
 
 A few plugins need to be installed to be able to use MicroSD card storage and to install some
 prerequisites for `UbxLogger`.These are described in the next section
@@ -104,9 +109,8 @@ Next, in `OpenWrt LuCI -> System -> Mount points`, in the section on `Moint Poin
 select the device, click on the `Edit` button, and enter as mount point `/mnt/sda1`,
 and click on `Save`. Then click on `Save and Apply` to complete the process.
 
-Now you should be able to see the mounted SD card under Mounted file systems and the
+Now you should be able to see the mounted SD card under `Mounted file systems` and the
 SD card is ready to be used. 
-
 
 ## Download and install `UbxLogger` software
 
@@ -117,7 +121,7 @@ To install the `UbxLogger` software download the installation script, run and fo
 
 The script will guide you step by step through the installation process providing sensible defaults. When the script
 finishes the software and executable are installed on the micro SD card, and the user is provided with some
-guidance on how to preceed with the second part of the installation.
+guidance on how to proceed with the second part of the installation.
 
 The second part of the installation is done by a separate script that is installed along with
 the software. To run the second part of the install
@@ -127,7 +131,7 @@ the software. To run the second part of the install
 
 For other platforms replace *openwrt-mips* with one of the architectures provided in the `ubxdir/sys` folder.
 
-Thi script will create symbolic links to the executable and scripts installed during the first step, install 
+This script will create symbolic links to the executable and scripts installed during the first step, install 
 necessary packages, enable crontab and add a service (`cronatreboot`) to resume logging after a reboot. 
 
 The script will provide you with the option to install RTKLIB's `str2str` using an OpenWrt package or 
@@ -183,7 +187,7 @@ To configure `UbxLogger`
    Replace `identifier` with the value(s) that you selected. If you don't plan on logging navigation data - something that we recommend not to do - then you need to enter also the 
    approximate coordinates of the station in the configuration file.   
 
-In this phase of the installation process the software is fully functional and can be started and stopped manually, as is decribed in the [software manual][2]. 
+In this phase of the installation process the software is fully functional and can be started and stopped manually, as is described in the [software manual][2]. 
 
 ## Starting and stopping the software
 
@@ -207,7 +211,7 @@ Crontab on OpenWrt does not support the `@reboot` directive. This directive must
 The `cronatreboot` service that is installed during the second part of the install will use the commented out
 directive to start logging after a (re)boot.
 
-Note that `crontab` works with local time. To have this synchronized with `UTC` make sure that you're local time is set to `UTC`.
+Note that `crontab` works with local time. To have this synchronized with `UTC` set local time to `UTC` or account for the time difference in the crontab (which can be tricky with daylight saving time).
 
 ## Remote connections
 
@@ -218,7 +222,7 @@ To access the router remotely through the 4G LTE interface some additional setup
 ### GL-iNet GoodCloud
 
 The easiest way to achieve remote connectivity over the 4G or WAN network is via GL-iNet's [GoodCloud](https://www.goodcloud.xyz/#/login) 
-Cloud Management Software. *GoodCloud* uses reverse `ssh` to set up a long lasting connection. The connection is initiated by the 
+Cloud Management Software. *GoodCloud* uses something similar to reverse `ssh` to set up a long lasting connection. The connection is initiated by the 
 router, so as long as the router can connect to the Internet your are okay. No hassle with firewalls, dynamic DNS, etc.
 
 First, enable GoodLife in the admin Web interface on the router. Then, create an account on *GoodCloud*, and bind the device
@@ -230,18 +234,12 @@ GoodCloud is free software with unlimited number of devices. There is a paid ent
 
 ### Dynamic DNS (DDNS)
 
-Dynamics DNS (DDNS) is not needed with GoodCloud. The ip number can be retrieved from the GoodCloud interface. 
-
-However, it is a good idea to setup a dynamic DNS as backup, so that you can use a webbrowser and ssh to access the
-router remotely over the 4G network (except when CG-NAT is used by the telecom provider). If you do this, it is
-a good idea to limit the ip-range with access by setting the appropriate firewall rules.
-
-You also need to enable access from the WAN to ports 80 and 22 . 
+Dynamics DNS (DDNS) is not needed with GoodCloud. The ip number can be retrieved from the GoodCloud interface. However, if you want, setup dynamic DNS as backup, so that you can use a webbrowser and ssh to access the
+router remotely over the 4G network (except when CG-NAT is used by the telecom provider). If you do this, you must set an ip-range with appropriate Firewall rules and enable access from the WAN to ports 80 and 22 . 
 
 ### Firewall settings
 
 No modifications in the firewall settings are needed when *GoodCLoud* is used. 
-
 In case Dynamic DNS (DDNS) is used, or, if the system has a public ip, and ssh and/or web access are enabled, then it will be definitely necessary to add firewall rules to limit access to certain ip-ranges. 
 
 ### Reverse ssh and other cloud platforms
@@ -262,8 +260,8 @@ and stopping the `ubxlogd` deamon and automated conversion and file transfer.
 [2]. H. van der Marel (2024), UbxLogger Software Manual, TU Delft, September 2024.
 
 
-[1]: <UbxLogger_Hardware_manual.md> "H. van der Marel (2024), UbxLogger Hardware Manual, TU Delft, September 2024."
-[2]: <UbxLogger_Software_manual.md> "H. van der Marel (2024), UbxLogger Software Manual, TU Delft, September 2024."
+[1]: <UbxLogger_Hardware_Manual.md> "H. van der Marel (2024), UbxLogger Hardware Manual, TU Delft, September 2024."
+[2]: <UbxLogger_Software_Manual.md> "H. van der Marel (2024), UbxLogger Software Manual, TU Delft, September 2024."
 
 ## Appendices
 

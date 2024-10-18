@@ -45,7 +45,7 @@ must first be configured to send raw measurement data to the USB port. We use u-
 the proper COM port.
 2. Open `View->Messages View`, select `UBX-MON-VER` in the left pane, and check that the firmware version is `1.32` or higher. If not, upgrade
 the firmware to version 1.32.
-3. Open `View->Generation 9 Configuration View`, deselect `SBAS` and `QZSS` (unless you really want this data), and send configuration to
+3. Open `View->Generation 9 Configuration View`, deselect `SBAS` and `QZSS` if not needed, and send configuration to
 RAM+BBR+Flash
 4. Open `View->Configuration View`
 
@@ -76,18 +76,18 @@ OpenWrt saves the raw receiver data to the router's MicroSD card, optionally con
 optionally send it to an upstream server using the 4G connection. 
 
 <figure>
-    <img src="20240915_162004.jpg" width="800" 
+    <img src="20240915_162004.jpg" width="600" 
          alt="GL-iNet basic GNSS logger">
-    <figcaption>GL-iNet basic GNSS logger with a single U-blox ZED-F9P.</figcaption>
+    <figcaption><em><small>GL-iNet basic GNSS logger with a single U-blox ZED-F9P.</small></em></figcaption>
 </figure>
 
 \
 With an additional USB hub the router can log data from more than one receiver. 
 
 <figure>
-    <img src="20240915_161440.jpg" width="800" 
+    <img src="20240915_161440.jpg" width="600" 
          alt="GL-iNet dual GNSS logger">
-    <figcaption>GL-iNet dual GNSS logger with two U-blox ZED-F9P's.</figcaption>
+    <figcaption><em><small>GL-iNet dual GNSS logger with two U-blox ZED-F9P's.</small></em></figcaption>
 </figure>
 
 \
@@ -115,10 +115,7 @@ installation manual.
 
 ## Raspberry Pi with Teltonika RUT240 4G router
 
-This setup is now obsolete as the *GL-iNet X750* is our preferred platform because of the
-lower power requirements and ease of installation and use. Some description may be added
-at a later time for historical reasons. We use the hardware setup with Raspberry Pi also as
-a reference benchmark for comparisons.
+This setup on a Raspberry Pi is pretty standard and not further discussed (The *GL-iNet X750* is our preferred platform because of the lower power requirements). 
 
 ## UbxLogger software
 
@@ -147,25 +144,17 @@ upstream server, desktop or laptop using the same scripts.
 
 All data files follow the RINEX3 file naming convention
 
->    SITExxST#_YYYYDDDHHMM_FFU_DDU_MO.{ubx|rnx|crx}[.gz] 
+>    SITE9CHAR_YYYYDDDHHMM_FFU_DDU_MO.{ubx|rnx|crx}[.gz] 
 
 All elements are fixed length and are separated by an underscore “_” except 
 for the file type (`ubx`, `rnx` or `crx`) and optional compression field (`.gz`)
 that use a period “.” as a separator. 
 
-The 9 character station name `SITExxST#` consists of a 4-character site name `SITE` (e.g.
-'ZEGV', 'ROVN', ...), a fixed separator `xx`, and an instrument sub-identifier `ST#`. 
-Note that we cannot use `_` or `-` as separators or in the names, as `_` is reserved for 
+The 9 character station name `SITE9CHAR` consists usually follows the convention `SITEMRCCC` with a 4-character site name `SITE` (e.g.
+'ZEGV', 'ROVN', ...), two decimals `MR` for the monument and receiver number, and the country code `CCC`. 
+However, you can use any naming convention as long as the total length does not exceed 9 characters, and you don't use `_` or `-` in the name, as `_` is reserved for 
 separating fields in the RINEX name, nor can we use `-` as this is very
-awkward for shell scripting. The `xx` sets it also apart from the IGS naming convention.
-
-The instrument identifier `ST#` can basically be anything as long as it is 3 characters, so 
-that the total length of the station name does not exceed 9 characters. A sensible
-naming scheme could be the following: two characters `ST` (for stratum) identifying the 
-foundation depth followed by a number `#` to indicate the location at a site (to cover 
-situations when there are multiple instrument locations at a site). The stratum `ST` can either 
-be *TS* an instrument embeded in the top soil, *DF* for a deeply founded instrument, or *SA*, 
-*SB*, *SC*, etc., to indicate a specific stratum in the soil layers.  
+awkward for shell scripting.     
 
 The software is managed through the `ubxlogd` script. The syntax is
 
@@ -173,7 +162,7 @@ The software is managed through the `ubxlogd` script. The syntax is
 >    ./ubxlogd.sh status\
 >    ./ubxlogd -h
 
-The 9 character station name `SITExxST#` is used for `'identifier'`.  
+The 9 character station name `SITE9CHAR` is used for `'identifier'`.  
 
 For more details and other commands see the [UbxLogger Software Manual][1].   
 
@@ -263,9 +252,9 @@ meter is used. For the 5 V circuit a USB 3.0 *AT35 3.7-30V 0-4A* digital Multime
 Both instruments measure instantaneous Voltage (V), Amperes (A) and Power (W) and the consumed energy (Wh) over time. 
 
 <figure>
-    <img src="./20240915_150119.jpg" width="800" 
+    <img src="./20240915_150119.jpg" width="600" 
          alt="GL-iNet dual GNSS logger">
-    <figcaption>Power test measurement setup with GL-iNet dual GNSS logger with two U-blox ZED-F9P's.</figcaption>
+    <figcaption><em><small>Power test measurement setup with GL-iNet dual GNSS logger with two U-blox ZED-F9P's.</small></em></figcaption>
 </figure>
 
 #### GL-iNet X750V with two ZED-F9P receivers

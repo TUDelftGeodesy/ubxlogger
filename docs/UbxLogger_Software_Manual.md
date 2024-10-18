@@ -73,11 +73,13 @@ The command `./ubxlogd.sh status 'identifier'` only writes to the console. It do
 anything in the log file. It is intended to be used from the command line to inspect the
 status of the deamon. It can be used with and without optional `'identifier'`.
 
-The `'identifier'` is the name of the stream. It typically consists of a four letter sitename, 
-followed by 'xx', and then a three letter instrument code. Two examples are *ZEGVxxTS1* and
-*ZEGVxxDF1*, for a site in Zegveld, one instrument on the top soil (*TS1*) and the other
-deeply founded (*DF1*). The number is used when there are more instrument locations on the
-same site. See also the sections on naming conventions.
+The `'identifier'` is the name of the stream. It is usually the same as the 9 character 
+RINEX-3 station name `SITEMRCCC`, with `SITE` a four letter sitename,  followed by two
+digits `MR` for the monument and receiver number, and country code `CCC`. Other naming
+conventions are also possible, as long as the total length does not exceed 9 characters, 
+and you don't use `_` or `-` in the name, as `_` is reserved for 
+separating fields in the RINEX name, nor can we use `-` as this is very
+awkward for shell scripting. 
 
 The raw ubx data is written to hourly files in the `run/` directory following the RINEX3 naming 
 convention, with `ubx` as file extension (instead of `rnx`) and `'identifier'` as station
@@ -272,6 +274,7 @@ The default directory stucture for `UbxLogger` is
 >        |   |    |- doy
 >        |   |    v
 >        |   v
+>        |- docs
 >        |- log
 >        |- run
 >        |- scripts
@@ -308,22 +311,17 @@ The default directory structure can be changed in the configuration file.
 
 All data files follow the RINEX3 file naming convention
 
->    XXXXMRCCC_R_YYYYDDDHHMM_FFU_DDU_MO.{ubx|rnx|crx}[.gz] \
->    XXXXMRCCC_R_YYYYDDDHHMM_FFU_MN.rnx[.gz] \
->
->    SITExxST#_YYYYDDDHHMM_FFU_DDU_MO.{ubx|rnx|crx}[.gz] 
+>    SITE9CHAR_R_YYYYDDDHHMM_FFU_DDU_MO.{ubx|rnx|crx}[.gz] \
+>    SITE9CHAR_R_YYYYDDDHHMM_FFU_MN.rnx[.gz] \
 
-All elements are fixed length and are separated by an underscore “_” except 
+All elements are fixed length and are separated by an underscore "_" except 
 for the file type (`ubx`, `rnx` or `crx`) and optional compression field (`.gz`)
-that use a period “.” as a separator. The individual elements are:
+that use a period "." as a separator. The individual elements are:
 
-Station/project name `XXXXMRCCC` or `SITExxST#` 
-:   This is a 9 character station or project name. The IGS convention is to use 4 characters 
-    `XXXX`for the site/station, two digits `MR` to indicate the monument respectively receiver number,
+Station/project name `SITE9CHAR` 
+:   This is a 9 character station or project name. The IGS convention is to use `XXXXMRCCC` with 
+    `XXXX` 4 characters for the site/station, two digits `MR` to indicate the monument respectively receiver number,
     and the ISO country code `CCC`, but this is not mandatory for other projects. 
-    For subsidence monitoring and geodetic extensometer applications the following naming 
-    convention for the 9 character station name is proposed,`SITExxST#`, see also the next
-    section.
     This element is also used as `UbxLogger` stream/receiver identifier `'identifier'`. 
 
 Data source `R` 
@@ -355,28 +353,6 @@ Data type and format `{MO|MN}.{ubx|rnx|crx}[.gz]`
 It is standard to archive the files in a layered directory structure `./YYYY/DDD/` with `YYYY`
 the year and `DDD` the day number of the year.
 
-## Station naming convention
-
-For subsidence monitoring and geodetic extensometer applications the following naming convention
-for the 9 character station name, used for the first element in the file name (see above) and used 
-as identifier in `UbxLogger`, is proposed:
-
->    SITExxST#
-
-with `SITE` the 4-character site name (e.g. 'ZEGV', 'ROVN', ...), `xx` a fixed separator, and 
-`ST#` the instrument identifier at the site. Note that we cannot use `_` or `-` as separators or in the names,
-as `_` is reserved for separating fields in the RINEX name, nor can we use `-` as this is very
-awkward for shell scripting. The `xx` sets it also apart from the IGS naming convention.
-
-The instrument identifier `ST#` can basically be anything as long as it is 3 characters, so that the
-total length of the station name does not exceed 9 characters. A sensible
-naming scheme could be the following: two characters `ST` (for stratum) identifying the 
-foundation depth followed by a number `#` to indicate the location at a site (to cover situations when
-there are multiple instrument locations at a site). The stratum `ST` can either be *TS* an instrument
-embeded in the top soil, *DF* for a deeply founded instrument, or *SA*, *SB*, *SC*, etc., to
-indicate a specific stratum in the soil layers.  
-
-
 ## USB port number assignment
 
 The device name (ttyACM0, ttyACM1, ..), which is needed by `ubxlogd`, is assigned more or 
@@ -391,25 +367,25 @@ serial id that otherwise can be used to distinquish between receivers.
 between receivers using the USB device path.**
 
 The device path must then be specified in the configuration file for each receiver.
-An example for setting the device paths in the configuratuin file is given below: 
+An example for setting the device paths in the configuration file is given below: 
 
->    devpath_ZEGVxxTS1=1.3.2 \
->    devpath_ZEGVxxDF1=1.3.4
+>    devpath_ZVTS00NLD=1.3.1 \
+>    devpath_ZVDF00NLD=1.3.2
 
-The identifier (e.g. `ZEGVxxTS1`) must preceeded by `devpath_`, the value is the USB 
+The identifier (e.g. `ZVTS00NLD`) must preceeded by `devpath_`, the value is the USB 
 device part (think of this a kind of port number) with variable name `${devpath}`.
 
 These settings are used by a function 'get_dev', also defined in the configuration file, 
-which uses the instrument identifier `${identifier}` variable (e.g. "ZEGVxxTS1") to 
-find the corresponding device path, set `${devpath}` (e.g. "1.3.2"), and then resolve 
+which uses the instrument identifier `${identifier}` variable (e.g. "ZVTS00NLD") to 
+find the corresponding device path, set `${devpath}` (e.g. "1.3.1"), and then resolve 
 the device name (e.g. ttyACM0) and return this in the variable `${dev}`. 
 
-The logic is to look for the USB device path `${devpath}` in the system directory
+The logic is to look for the USB device path `${devpath}` in the system directory 
 `/sys/bus/usb/devices/1-${devpath}:1.0/tty)`, which points to the tty device `${dev}` (e.g. ttyACM0)
 that is used for the USB serial device.
 
 The value of `${devpath}` must be set in `devpath_${instrument}=${devpath}`, e.g.
-`devpath_ZEGVxxTS1=1.3.2`. The actual value, in our case '1.3.2', depends on the USB port 
+`devpath_ZVTS00NLD=1.3.1`. The actual value, in our case '1.3.1', depends on the USB port 
 that we are using. In this case it is the second port on a USB hub which itself has 
 device path '1.3'. The actual numbers are different for each system.
 
