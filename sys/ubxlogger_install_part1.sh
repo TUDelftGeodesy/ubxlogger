@@ -21,6 +21,7 @@ echo ""
 sdcard="/mnt/sda1"
 release="v1.0"
 gittag="main"
+architecture="openwrt-mips"
 
 # ask user for input and confirmation
 
@@ -74,13 +75,28 @@ while true; do
         * ) echo "Please answer yes or no.";;
     esac
 done
-
-echo "Download the precompiled executable files from 'github' and unpack to 'bin/' folder"
-
 cd ${ubxdir}
-curl -L https://github.com/hvandermarel/ubxlogger/releases/download/${release}/openwrt-mips-bin.tar.gz -o ./openwrt-mips.tar.gz
-tar -xzf openwrt-mips.tar.gz
-chmod a+x bin/str2str bin/convbin bin/rnx2crx bin/crx2rnx 
+
+echo ""
+echo "Download precompiled executables for your system:"
+for dir in sys/*; do 
+    if [ -d "$dir" ]; then echo "   ${dir##*/}"; fi
+done
+while true; do
+    read -p "Select system [${architecture}]: " tmpinput
+    architecture=${tmpinput:-$architecture}
+    if [ -d sys/$architecture ]; then
+       break
+    else
+       echo "Please answer with one of options."
+    fi
+done
+
+echo "Downloading the precompiled executable files for $architecture from 'github' and unpack to 'bin/' folder"
+curl -L https://github.com/hvandermarel/ubxlogger/releases/download/${release}/${architecture}-bin.tar.gz -o ./${architecture}-bin.tar.gz
+tar -xzf ${architecture}-bin.tar.gz
+chmod a+x bin/str2str bin/convbin bin/rnx2crx bin/crx2rnx
+
 
 echo ""
 echo "The software is now installed with the default directory structure in ${ubxdir}."
@@ -88,15 +104,14 @@ echo ""
 echo "To create symbolic links, install packages and enable services use the commands"
 echo ""
 echo "    cd ${sdcard}/${ubxdir}"
-echo "    ./sys/openwrt-mips/scripts/ubxlogger_install_part2.sh"
+echo "    ./sys/${architecture}/scripts/ubxlogger_install_part2.sh"
 echo ""
-echo "For other platforms replace 'openwrt-mips' with one of the architectures provided"
-echo  "in the '${ubxdir}/sys' folder."
-echo ""
-echo "    Good to know: On OpenWrt this step must be repeated each time after a firmware "
-echo "    upgrade as this will install a clean system (the ubxlogger software, which is on"
-echo "    the microSD card, will not be erased by a firmware update)."
-echo ""
+if [ "${architecture}" = "openwrt-mips" ]; then
+   echo "Good to know: On OpenWrt this step must be repeated each time after a firmware "
+   echo "upgrade as this will install a clean system (the ubxlogger software, which is on"
+   echo "the microSD card, will not be erased by a firmware update)."
+   echo ""
+fi
 echo "Finally, prepare the configuration files and start the crontab."
 echo " "
 echo "- Edit the UbxLogger configuration file './scripts/ubxlogger.config'"
