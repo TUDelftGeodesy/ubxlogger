@@ -83,12 +83,12 @@ for ubxfile in ${ubxfiles}; do
    #curdoy=${yeardoyhhmm:4:3}
    curyear=${yeardoyhhmm%???????}
    curdoy=${yeardoyhhmm#????};curdoy=${curdoy%????}
-   if [ ".${filename##.}" = ".gz" ]; then
+   if [ ".${filename##*.}" = ".gz" ]; then
       curcompressed="yes"
    else
       curcompressed="no"
    fi
-  # Check that all files are for the same marker and days and have same compression state
+   # Check that all files are for the same marker and days and have same compression state
    if [ "${marker}" = "" ]; then
       marker=${curmarker}
       year=${curyear}
@@ -96,7 +96,7 @@ for ubxfile in ${ubxfiles}; do
       compressed=${curcompressed}
    fi
    if [ "${curmarker}" !=  "${marker}" ] || [ "${curyear}" !=  "${year}" ] ||
-          [ "${curdoy}" !=  "${doy}" ] || [ "${curcompression}" !=  "${compression}" ] ; then
+          [ "${curdoy}" !=  "${doy}" ] || [ "${curcompressed}" !=  "${compressed}" ] ; then
       echo "Input files are not for the same station, year or doy, or have not the same compression state, quiting..."
       exit 2
    fi
