@@ -76,7 +76,7 @@ OpenWrt saves the raw receiver data to the router's MicroSD card, optionally con
 optionally send it to an upstream server using the 4G connection. 
 
 <figure>
-    <img src="20240915_162004.jpg" width="600" 
+    <img src="glinet_single.jpg" width="600" 
          alt="GL-iNet basic GNSS logger">
     <figcaption><em><small>GL-iNet basic GNSS logger with a single U-blox ZED-F9P.</small></em></figcaption>
 </figure>
@@ -85,7 +85,7 @@ optionally send it to an upstream server using the 4G connection.
 With an additional USB hub the router can log data from more than one receiver. 
 
 <figure>
-    <img src="20240915_161440.jpg" width="600" 
+    <img src="glinet_dual.jpg" width="600" 
          alt="GL-iNet dual GNSS logger">
     <figcaption><em><small>GL-iNet dual GNSS logger with two U-blox ZED-F9P's.</small></em></figcaption>
 </figure>
