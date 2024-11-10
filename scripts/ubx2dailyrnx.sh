@@ -120,9 +120,11 @@ if [ $? -ne 0 ]; then
     fi
     exit 2
 fi
+
 # Get the start and end time (ubx files have some data before and after)
 
-ymd=$(date -d "${year}/01/01 + $(($doy-1)) days" +%Y/%m/%d 2> /dev/null)
+ddoy=$(echo ${doy} | sed 's/^0*//')
+ymd=$(date -d "${year}/01/01 + $(($ddoy-1)) days" +%Y/%m/%d 2> /dev/null)
 if [ $? -eq 0 ]; then
     # date is probably gnu date
     ts="${ymd} 00:00:00"

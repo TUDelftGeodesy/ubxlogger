@@ -110,7 +110,8 @@ hour=${yeardoyhhmm#???????};hour=${hour%%??}
 
 # Get the start and end time (ubx files have some data before and after)
 
-ymd=$(date -d "${year}/01/01 + $(($doy-1)) days" +%Y/%m/%d 2> /dev/null)
+ddoy=$(echo ${doy} | sed 's/^0*//')
+ymd=$(date -d "${year}/01/01 + $(($ddoy-1)) days" +%Y/%m/%d 2> /dev/null)
 if [ $? -eq 0 ]; then
    # date is probably gnu date
    ts="${ymd} ${hour}:00:00"
