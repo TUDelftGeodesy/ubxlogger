@@ -74,7 +74,16 @@ for d in ${spoolfolders}; do
        echo $(date -u +"%F %R") **Error: failed to create $rnxfile  >> $logfile
        continue
     fi
-    # push the rinex file to remote server (optionally) and/or move to archive
+done
+
+# push the rinex file to remote server (optionally) and/or move to archive
+
+for rnxfile in $(find ./${identifier}_R_*_01D_10S_MO.crx.gz -type f); do
+    yeardoy=${rnxfile#*_?_}
+    yeardoy=${yeardoy%%_*}
+    yeardoy=${yeardoy%%????}
+    year=${yeardoy%%???}
+    doy=${yeardoy#????}
     if [ "${remoternx}" != "" ]; then
        eval remote=${remoternx}
        curl -s --ftp-create-dirs --connect-timeout 10 --max-time 180 -T $rnxfile $authrnx  $remote
